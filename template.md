@@ -38,22 +38,18 @@
 - [ ] Update security rules and detection logic.  
 - [ ] Conduct a team debriefing session.  
 
-## 5. Escalation & Communication  
-| **Escalation Level** | **Contact Person/Team** | **Communication Channel** |  
-|---------------------|------------------|------------------|  
-| Tier 1 (SOC) | [SOC Analyst] | [Email / Slack / Ticketing System] |  
-| Tier 2 (Security Engineer) | [Security Engineer] | [Phone / On-Call] |  
-| Tier 3 (Management) | [CISO / IT Manager] | [Incident Report] |  
 
-## 6. References & Documentation  
+## 5. References & Documentation
+
+`TODO: Specify resources to accomplish remediation.`
 - [MITRE ATT&CK Tactics & Techniques](https://attack.mitre.org/)  
 - [Wazuh Rule Documentation](https://documentation.wazuh.com/current/user-manual/ruleset/rules.html)  
-- [CIS Controls](https://www.cisecurity.org/controls/)  
+ 
 
 
 ---
 
-### Incident Report
+## 6. Incident Report
 
 **1.Summary:** Incident type, impact, actions taken.
 
