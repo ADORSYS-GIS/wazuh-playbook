@@ -16,8 +16,7 @@ This document provides a detailed explanation of the **Integration & Remediation
   ```
   <integration>
         <name>slack</name>
-        <hook_url>https://hooks.slack.com/services/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</hook_url> <!-- Replace with your Slack hook URL -->
-        <!--<rule_id>504,506,5503,120100</rule_id>-->
+        <hook_url>webhook-url</hook_url> <!-- Replace with your Slack hook URL -->
         <level>3</level>
         <alert_format>json</alert_format>
         <event_location></event_location>
@@ -36,8 +35,8 @@ This document provides a detailed explanation of the **Integration & Remediation
   ```
   <integration>
         <name>custom-jira</name>
-        <hook_url>https://api-private.atlassian.com/automation/webhooks/jira/a/b59302f3-a656-4cfa-8007-9c90e3d75343/0195b2a3-f082-768f-86c6-0f8210e7cea3</hook_url>
-        <api_key>406175b550e5966eb2d5c03d791bcd7639aea915</api_key>
+        <hook_url>webhook-url</hook_url>
+        <api_key>API_KEY</api_key>
         <alert_format>json</alert_format>
         <level>10</level>
         <rule_id>120100</rule_id>
@@ -102,3 +101,94 @@ To ensure sensitive credentials (e.g., Slack Webhooks, Jira API keys) are secure
 2. Create Kubernetes Secrets from these values
 
 3. Reference the Kubernetes Secret in your Helm values.yaml
+
+## Overview
+
+Securely manage Jira credentials for Wazuh using AWS Secrets Manager, Kubernetes Secrets, and Helm.
+
+### Workflow
+
+
+
+
+
+### 1. Store Credentials in AWS Secrets Manager:
+
+
+
+
+
+- Create secret wazuh/jira-api-key:
+```
+aws secretsmanager create-secret \
+  --name wazuh/jira-api-key \
+  --secret-string '{"JIRA_URL":"WEBHOOK_URL","JIRA_API_KEY":"API_KEY","JIRA_PROJECT_KEY":"PROJ"}' \
+  --region <aws-region>
+```
+
+
+- Verify: aws secretsmanager get-secret-value --secret-id wazuh/jira-api-key --region <aws-region>
+
+
+
+### 2. Create Kubernetes Secret:
+
+
+
+
+- Install External Secrets Operator
+
+
+
+- Create ExternalSecret:
+```
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: wazuh-jira-secret
+  namespace: <namespace>
+spec:
+
+```
+
+- Verify: kubectl get secret <release-name>-wazuh-jira -n <namespace> -o yaml
+
+
+
+### 3. Reference Secret in Helm:
+
+
+
+
+
+- Update values.yaml:
+```
+integration:
+  jira:
+    enabled: true
+    externalSecret: true
+```
+
+
+- Deploy: helm upgrade --install <release-name> ./wazuh-chart -n <namespace> -f values.yaml
+
+**Integration Details**
+
+
+
+- Files: custom-jira, custom-jira.py in /var/ossec/integrations (from ConfigMap, copied to jira-writable).
+
+
+
+- Permissions: permission-fix initContainer sets root:wazuh (GID 999), 0750 permissions.
+
+
+
+**Verification:**
+
+
+- Permissions: kubectl exec <worker-pod> -n <namespace> -c wazuh-manager -- ls -l /var/ossec/integrations/
+
+
+
+ - Secret: kubectl exec <worker-pod> -n <namespace> -c wazuh-init -- env | grep JIRA
