@@ -1,0 +1,73 @@
+<group name="audit">
+
+  <rule id="80700" level="0" overwrite="yes">
+    <decoded_as>auditd</decoded_as>
+    <description>Audit: Messages grouped.</description>
+  </rule>
+
+    <!-- Unauthorized sudo or su usage -->
+  <rule id="100100" level="10">
+    <if_sid>80700</if_sid> <!-- Auditd rule matched -->
+    <match>key=T1169_Sudo</match>
+    <description>Unauthorized use of su/sudo or tampering with sudoers</description>
+    <group>authentication_failed,</group>
+  </rule>
+
+  <!-- Privilege escalation using setuid/setgid or UID/GID manipulation -->
+  <rule id="100101" level="9">
+    <if_sid>80700</if_sid>
+    <match>key=T1166_Seuid_and_Setgid</match>
+    <description>Suspicious setuid/setgid or ownership/permission change activity</description>
+  </rule>
+
+  <!-- Failed permission attempts (e.g., EPERM) -->
+  <rule id="100103" level="8">
+    <if_sid>80700</if_sid>
+    <match>exit=EPERM</match>
+    <description>Failed permission change or UID switch (EPERM)</description>
+    <group>unauthorized_access,</group>
+  </rule>
+
+  <!-- Watching /usr/bin/ for tampering -->
+  <rule id="100104" level="10">
+    <if_sid>80700</if_sid>
+    <match>key=T1068_Exploitation_for_Privilege_Escalation</match>
+    <description>Potential binary tampering in /usr/bin/ (T1068)</description>
+    <group>command_injection,exploit_attempt,</group>
+  </rule>
+
+  <rule id="100200" level="10">
+    <if_sid>80700</if_sid>
+    <match>key=unauthorized_file_access</match>
+    <description>Unauthorized file or system access attempt</description>
+    <group>unauthorized_access,sensitive_data_access,</group>
+  </rule>
+
+
+  <!-- Use of root account to access user home directories -->
+  <rule id="100203" level="9">
+    <if_sid>80700</if_sid>
+    <match>uid=0</match>
+    <match>dir=/home</match>
+    <description>Root user accessing /home directories (potential misuse)</description>
+    <group>insider_threat,privilege_misuse,</group>
+  </rule>
+
+  <!-- Suspicious escalation: execution with mismatched AUID and UID -->
+  <rule id="100204" level="9">
+    <if_sid>80700</if_sid>
+    <match>auid!=uid</match>
+    <description>Suspicious process execution (AUID ≠ UID)</description>
+    <group>privilege_escalation,anomaly,</group>
+  </rule>
+
+  <!-- Elevated privilege usage not normally assigned to a user -->
+  <rule id="100205" level="10">
+    <if_sid>80700</if_sid>
+    <match>setuid</match>
+    <match>auid>=1000</match>
+    <description>Non-root user using setuid/setgid to gain privileges</description>
+    <group>privilege_escalation,insider_threat,</group>
+  </rule>
+</group>
+    

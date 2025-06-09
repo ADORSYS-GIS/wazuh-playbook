@@ -1,0 +1,89 @@
+## Privleged Command Execution Related Events
+-a exit,always -F arch=b64 -F euid=0 -S execve -k T1078_Valid_Accounts
+-a exit,always -F arch=b32 -F euid=0 -S execve -k T1078_Valid_Accounts
+-a always,exit -F path=/usr/sbin/userdel -F perm=x -F auid>=500 -F auid!=4294967295 -k T1078_Valid_Accounts
+-a always,exit -F path=/bin/ping -F perm=x -F auid>=500 -F auid!=4294967295 -k T1078_Valid_Accounts
+-a always,exit -F path=/bin/umount -F perm=x -F auid>=500 -F auid!=4294967295 -k T1078_Valid_Accounts
+-a always,exit -F path=/bin/mount -F perm=x -F auid>=500 -F auid!=4294967295 -k T1078_Valid_Accounts
+-a always,exit -F path=/bin/su -F perm=x -F auid>=500 -F auid!=4294967295 -k T1078_Valid_Accounts
+-a always,exit -F path=/bin/chgrp -F perm=x -F auid>=500 -F auid!=4294967295 -k T1078_Valid_Accounts
+-a always,exit -F path=/bin/ping6 -F perm=x -F auid>=500 -F auid!=4294967295 -k T1078_Valid_Accounts
+-a always,exit -F path=/sbin/pam_timestamp_check -F perm=x -F auid>=500 -F auid!=4294967295 -k T1078_Valid_Accounts
+-a always,exit -F path=/sbin/unix_chkpwd -F perm=x -F auid>=500 -F auid!=4294967295 -k T1078_Valid_Accounts
+-a always,exit -F path=/sbin/pwck -F perm=x -F auid>=500 -F auid!=4294967295 -k T1078_Valid_Accounts
+-a always,exit -F path=/usr/sbin/suexec -F perm=x -F auid>=500 -F auid!=4294967295 -k T1078_Valid_Accounts
+-a always,exit -F path=/usr/sbin/usermod -F perm=x -F auid>=500 -F auid!=4294967295 -k T1078_Valid_Accounts
+-a always,exit -F path=/usr/sbin/newusers -F perm=x -F auid>=500 -F auid!=4294967295 -k T1078_Valid_Accounts
+-a always,exit -F path=/usr/sbin/groupdel -F perm=x -F auid>=500 -F auid!=4294967295 -k T1078_Valid_Accounts
+-a always,exit -F path=/usr/sbin/semanage -F perm=x -F auid>=500 -F auid!=4294967295 -k T1078_Valid_Accounts
+-a always,exit -F path=/usr/sbin/usernetctl -F perm=x -F auid>=500 -F auid!=4294967295 -k T1078_Valid_Accounts
+-a always,exit -F path=/usr/sbin/ccreds_validate -F perm=x -F auid>=500 -F auid!=4294967295 -k T1078_Valid_Accounts
+-a always,exit -F path=/usr/sbin/userhelper -F perm=x -F auid>=500 -F auid!=4294967295 -k T1078_Valid_Accounts
+##-a always,exit -F path=/usr/libexec/openssh/ssh-keysign -F perm=x -F auid>=500 -F auid!=4294967295 -k T1078_Valid_Accounts
+-a always,exit -F path=/usr/bin/Xorg -F perm=x -F auid>=500 -F auid!=4294967295 -k T1078_Valid_Accounts
+-a always,exit -F path=/usr/bin/rlogin -F perm=x -F auid>=500 -F auid!=4294967295 -k T1078_Valid_Accounts
+-a always,exit -F path=/usr/bin/sudoedit -F perm=x -F auid>=500 -F auid!=4294967295 -k T1078_Valid_Accounts
+-a always,exit -F path=/usr/bin/at -F perm=x -F auid>=500 -F auid!=4294967295 -k T1078_Valid_Accounts
+-a always,exit -F path=/usr/bin/rsh -F perm=x -F auid>=500 -F auid!=4294967295 -k T1078_Valid_Accounts
+-a always,exit -F path=/usr/bin/gpasswd -F perm=x -F auid>=500 -F auid!=4294967295 -k T1078_Valid_Accounts
+-a always,exit -F path=/usr/bin/kgrantpty -F perm=x -F auid>=500 -F auid!=4294967295 -k T1078_Valid_Accounts
+-a always,exit -F path=/usr/bin/crontab -F perm=x -F auid>=500 -F auid!=4294967295 -k T1078_Valid_Accounts
+-a always,exit -F path=/usr/bin/sudo -F perm=x -F auid>=500 -F auid!=4294967295 -k T1078_Valid_Accounts
+-a always,exit -F path=/usr/bin/staprun -F perm=x -F auid>=500 -F auid!=4294967295 -k T1078_Valid_Accounts
+-a always,exit -F path=/usr/bin/rcp -F perm=x -F auid>=500 -F auid!=4294967295 -k T1078_Valid_Accounts
+-a always,exit -F path=/usr/bin/passwd -F perm=x -F auid>=500 -F auid!=4294967295 -k T1078_Valid_Accounts
+-a always,exit -F path=/usr/bin/chsh -F perm=x -F auid>=500 -F auid!=4294967295 -k T1078_Valid_Accounts
+-a always,exit -F path=/usr/bin/chfn -F perm=x -F auid>=500 -F auid!=4294967295 -k T1078_Valid_Accounts
+-a always,exit -F path=/usr/bin/chage -F perm=x -F auid>=500 -F auid!=4294967295 -k T1078_Valid_Accounts
+-a always,exit -F path=/usr/bin/setfacl -F perm=x -F auid>=500 -F auid!=4294967295 -k T1078_Valid_Accounts
+-a always,exit -F path=/usr/bin/chacl -F perm=x -F auid>=500 -F auid!=4294967295 -k T1078_Valid_Accounts
+-a always,exit -F path=/usr/bin/chcon -F perm=x -F auid>=500 -F auid!=4294967295 -k T1078_Valid_Accounts
+-a always,exit -F path=/usr/bin/newgrp -F perm=x -F auid>=500 -F auid!=4294967295 -k T1078_Valid_Accounts
+-a always,exit -F path=/usr/bin/newrole -F perm=x -F auid>=500 -F auid!=4294967295 -k T1078_Valid_Accounts 
+
+## Priv Escalation Related Events
+-w /bin/su -p x -k T1169_Sudo
+-w /usr/bin/sudo -p x -k T1169_Sudo
+-w /etc/sudoers -p rw -k T1169_Sudo
+-a always,exit -F dir=/home -F uid=0 -F auid>=1000 -F auid!=4294967295 -C auid!=obj_uid -k T1169_Sudo
+-a always,exit -F arch=b32 -S chmod -F auid>=500 -F auid!=4294967295 -k T1166_Seuid_and_Setgid
+-a always,exit -F arch=b32 -S chown -F auid>=500 -F auid!=4294967295 -k T1166_Seuid_and_Setgid
+-a always,exit -F arch=b32 -S fchmod -F auid>=500 -F auid!=4294967295 -k T1166_Seuid_and_Setgid
+-a always,exit -F arch=b32 -S fchmodat -F auid>=500 -F auid!=4294967295 -k T1166_Seuid_and_Setgid
+-a always,exit -F arch=b32 -S fchown -F auid>=500 -F auid!=4294967295 -k T1166_Seuid_and_Setgid
+-a always,exit -F arch=b32 -S fchownat -F auid>=500 -F auid!=4294967295 -k T1166_Seuid_and_Setgid
+-a always,exit -F arch=b32 -S fremovexattr -F auid>=500 -F auid!=4294967295 -k T1166_Seuid_and_Setgid
+-a always,exit -F arch=b32 -S fsetxattr -F auid>=500 -F auid!=4294967295 -k T1166_Seuid_and_Setgid
+-a always,exit -F arch=b32 -S lchown -F auid>=500 -F auid!=4294967295 -k T1166_Seuid_and_Setgid
+-a always,exit -F arch=b32 -S lremovexattr -F auid>=500 -F auid!=4294967295 -k T1166_Seuid_and_Setgid
+-a always,exit -F arch=b32 -S lsetxattr -F auid>=500 -F auid!=4294967295 -k T1166_Seuid_and_Setgid
+-a always,exit -F arch=b32 -S removexattr -F auid>=500 -F auid!=4294967295 -k T1166_Seuid_and_Setgid
+-a always,exit -F arch=b32 -S setxattr -F auid>=500 -F auid!=4294967295 -k T1166_Seuid_and_Setgid
+-a always,exit -F arch=b64 -S chmod  -F auid>=500 -F auid!=4294967295 -k T1166_Seuid_and_Setgid
+-a always,exit -F arch=b64 -S chown -F auid>=500 -F auid!=4294967295 -k T1166_Seuid_and_Setgid
+-a always,exit -F arch=b64 -S fchmod -F auid>=500 -F auid!=4294967295 -k T1166_Seuid_and_Setgid
+-a always,exit -F arch=b64 -S fchmodat -F auid>=500 -F auid!=4294967295 -k T1166_Seuid_and_Setgid
+-a always,exit -F arch=b64 -S fchown -F auid>=500 -F auid!=4294967295 -k T1166_Seuid_and_Setgid
+-a always,exit -F arch=b64 -S fchownat -F auid>=500 -F auid!=4294967295 -k T1166_Seuid_and_Setgid
+-a always,exit -F arch=b64 -S fremovexattr -F auid>=500 -F auid!=4294967295 -k T1166_Seuid_and_Setgid
+-a always,exit -F arch=b64 -S fsetxattr -F auid>=500 -F auid!=4294967295 -k T1166_Seuid_and_Setgid
+-a always,exit -F arch=b64 -S lchown -F auid>=500 -F auid!=4294967295 -k T1166_Seuid_and_Setgid
+-a always,exit -F arch=b64 -S lremovexattr -F auid>=500 -F auid!=4294967295 -k T1166_Seuid_and_Setgid
+-a always,exit -F arch=b64 -S lsetxattr -F auid>=500 -F auid!=4294967295 -k T1166_Seuid_and_Setgid
+-a always,exit -F arch=b64 -S removexattr -F auid>=500 -F auid!=4294967295 -k T1166_Seuid_and_Setgid
+-a always,exit -F arch=b64 -S setxattr -F auid>=500 -F auid!=4294967295 -k T1166_Seuid_and_Setgid
+-a always,exit -F arch=b64 -C auid!=uid -S execve -k T1166_Seuid_and_Setgid
+-a always,exit -F arch=b32 -C auid!=uid -S execve -k T1166_Seuid_and_Setgid
+-a always,exit -F arch=b64 -S setuid -S setgid -S setreuid -S setregid -k T1166_Seuid_and_Setgid
+-a always,exit -F arch=b32 -S setuid -S setgid -S setreuid -S setregid -k T1166_Seuid_and_Setgid
+-a always,exit -F arch=b64 -S setuid -S setgid -S setreuid -S setregid -F exit=EPERM -k T1166_Seuid_and_Setgid
+-a always,exit -F arch=b32 -S setuid -S setgid -S setreuid -S setregid -F exit=EPERM -k T1166_Seuid_and_Setgid
+-w /usr/bin/ -p wa -k T1068_Exploitation_for_Privilege_Escalation
+
+# Watch access to sensitive system files
+-w /etc/shadow -p r -k unauthorized_file_access
+-w /etc/passwd -p r -k unauthorized_file_access
+# Monitor root access to user home directories
+-a always,exit -F dir=/home -F uid=0 -F auid>=1000 -F auid!=4294967295 -k root_access_home
+# Watch setuid/setgid usage by non-root users
+-a always,exit -F arch=b64 -S setuid -S setgid -F auid>=1000 -F auid!=4294967295 -k privilege_misuse
