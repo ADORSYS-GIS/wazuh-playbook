@@ -24,20 +24,21 @@
 - **Update `global.version`**
 
   Modify the `global.version` field in `charts/wazuh/values.yaml` to the target Wazuh version.
-
+  
   ![Example of version update](assets/image.png)
 
 - **Apply Configuration Changes**
 
   Review and apply changes from the `CHANGELOG.md` of the [wazuh-kubernetes](https://github.com/wazuh/wazuh-kubernetes) repository.
 
-  Example for version **v4.11.1**:  
-  [CHANGELOG](https://github.com/wazuh/wazuh-kubernetes/blob/v4.11.1/CHANGELOG.md)
+  Example for version **v4.10.1**:  
+  [CHANGELOG](https://github.com/wazuh/wazuh-kubernetes/blob/v4.10.1/CHANGELOG.md)
 
-  - If you're upgrading from **v4.11.0** -> **v4.11.1**, no configuration changes are required.
+  - If you're upgrading from **v4.10.0** -> **v4.10.1**, no configuration changes are required.
 
-  - Upgrading from older versions (e.g., **v4.10.0**) might require config changes:  
-    ![Configuration change example](assets/image-2.png)
+  - Upgrading from older versions (e.g., **v4.9.2**) might require config changes:  
+  
+    ![Configuration change example](assets/image-1.png)
 
 - **Update Helm Chart Metadata**
 
@@ -59,13 +60,13 @@ This repo contains Argo CD configs that deploy Wazuh in both `dev` and `prod` cl
   - On the `develop` branch, update the `targetRevision` for the Wazuh application in `charts/argocd-apps/values-dev.yaml`.
   - Set the value to match the new Helm release version.
 
-    ![Dev cluster update](assets/image-3.png)
+    ![Dev cluster update](assets/image-2.png)
 
 - **Prod Cluster Update**
   - On the `main` branch, update the `targetRevision` in `charts/argocd-apps/values-prod.yaml`.
   - Again, use the same Helm release version.
 
-    ![Prod cluster update](assets/image-5.png)
+    ![Prod cluster update](assets/image-3.png)
     
 Commit and push your changes. This triggers a GitHub Action to publish a new helm release using ARGO CD in our infrastructure.
 
