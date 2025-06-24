@@ -1,12 +1,12 @@
 ## Wazuh SCA OS Support Timeline
 
-### **Wazuh 4.7.4** – released 29 April 2024 ([documentation.wazuh.com][1])
+### **Wazuh 4.7.4** – released 29 April 2024 ([Wazuh 4.7.4 Release Notes][1])
 
 Included all baseline SCA policy files for these OS versions (as listed in SCA policy catalog):
 
 * **Windows**: Win 10, Win 11, Server 2012 (non‑R2 & R2), 2016, 2019, 2022
-* **Linux**: Alma/Rocky/Oracle/CentOS/RHEL 5–10; Debian 7–12; Ubuntu 14.04–22.04; Amazon Linux 1, 2, 2023; SUSE SLES 11–15; Solaris 11/11.4; HP‑UX 11i ([github.com][2], [documentation.wazuh.com][3])
-* **macOS**: macOS 10.11 → 14.x (El Capitan through Sonoma) ([documentation.wazuh.com][3])
+* **Linux**: Alma/Rocky/Oracle/CentOS/RHEL 5–10; Debian 7–12; Ubuntu 14.04–22.04; Amazon Linux 1, 2, 2023; SUSE SLES 11–15; Solaris 11/11.4; HP‑UX 11i ([SCA maintenance monthly check][2], [Official Wazuh SCA Policy Catalog][3])
+* **macOS**: macOS 10.11 → 14.x (El Capitan through Sonoma) ([Official Wazuh SCA Policy Catalog][3])
 
 ---
 
@@ -16,13 +16,13 @@ These were minor/cumulative releases that **retained support** for the same OS v
 
 ---
 
-### **Wazuh 4.12.0** – released 7 May 2025 ([documentation.wazuh.com][4])
+### **Wazuh 4.12.0** – released 7 May 2025 ([4.12.0 Release notes][4])
 
 **Newly added SCA support** in this release:
 
-* **Windows**: **Server 2025** (via `cis_win2025.yml`) ([documentation.wazuh.com][3])
-* **Linux**: **Ubuntu 24.04 LTS** (via `cis_ubuntu24-04.yml`) and **generic distribution‑independent policy** ([documentation.wazuh.com][3])
-* **macOS**: **macOS 15.x (Sequoia)** support (via `cis_apple_macOS_15.x.yml`) ([documentation.wazuh.com][3])
+* **Windows**: **Server 2025** (via `cis_win2025.yml`) ([Official Wazuh SCA Policy Catalog][3])
+* **Linux**: **Ubuntu 24.04 LTS** (via `cis_ubuntu24-04.yml`) and **generic distribution‑independent policy** ([Official Wazuh SCA Policy Catalog][3])
+* **macOS**: **macOS 15.x (Sequoia)** support (via `cis_apple_macOS_15.x.yml`) ([Official Wazuh SCA Policy Catalog][3])
 
 All previous SCA policies (e.g. Windows 10/11, Ubuntu 22.04, macOS 14.x, etc.) continued to be supported alongside the new additions.
 
