@@ -84,5 +84,11 @@ All rules must include:
 # Monitor permission/ownership changes
 -w /etc/shadow -p a -k audit-wazuh-a
 ```
+
+### Conclusion
+**Yes, integrate `auditd`** — it adds critical real-time visibility that rootcheck lacks. However:  
+- **Replace rootcheck** with **FIM + auditd** for a modern, real-time monitoring stack.  
+- **Tune rules** to avoid alert fatigue (focus on high-risk events).  
+
 #### Reference:
 - [Wazuh documentation](https://documentation.wazuh.com/current/user-manual/capabilities/system-calls-monitoring/audit-configuration.html#configuration)
