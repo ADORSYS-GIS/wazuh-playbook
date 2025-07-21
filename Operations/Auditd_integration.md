@@ -1,10 +1,9 @@
 # Wazuh Audit Log Integration Documentation
 
-## Wazuh Manager Configuration (Agent.conf)
-Objective: Configure Wazuh Manager to collect and process auditd logs from agents.
+## Part 1: Wazuh Manager Configuration (Agent.conf)
 
 ### 1.1. Configure Audit Log Collection
-Edit the agent.conf template on the Wazuh Manager (/var/ossec/etc/shared/default/agent.conf):
+Edit the agent.conf template on the Wazuh Manager (/var/ossec/etc/shared/agent.conf):
 
 ```xml
 <agent_config>
@@ -24,11 +23,39 @@ Edit the agent.conf template on the Wazuh Manager (/var/ossec/etc/shared/default
 ### 1.2. Deploy Configuration to Agents
 The manager pushes agent.conf to all enrolled agents automatically.
 
-Alternatively, manually restart agents to apply changes:
+## Part 2: Group-Based Configuration via Wazuh Dashboard
+### 2.1. Assign Agents to Groups
+1. Navigate to: **Management → Groups**
+
+2. Create a group (e.g., `linux-audit`) and assign relevant agents.
+
+### 2.2. Apply Group-Specific Audit Config
+1. Go to: **Management → Configuration → Groups**
+
+2. Select your group (`linux-audit`) and edit agent.conf:
+
+```xml
+<agent_config>
+  <localfile>
+    <log_format>audit</log_format>
+    <location>/var/log/audit/audit.log</location>
+  </localfile>
+</agent_config>
+```
+3. **Save** – Changes deploy automatically to group members.
+
+**Advantages:**
+
+- No manual file edits required.
+- Changes are version-controlled and reversible.
+
+
+
+#### Alternatively, manually restart agents to apply changes:
 ```bash
 /var/ossec/bin/wazuh-control restart
 ```
-### 1.3. Verify Log Collection
+**Verify Log Collection:**
 Check the Wazuh Manager logs (/var/ossec/logs/alerts/alerts.json) for incoming audit events.
 
 
@@ -84,11 +111,15 @@ All rules must include:
 # Monitor permission/ownership changes
 -w /etc/shadow -p a -k audit-wazuh-a
 ```
-
-### Conclusion
-**Yes, integrate `auditd`** — it adds critical real-time visibility that rootcheck lacks. However:  
-- **Replace rootcheck** with **FIM + auditd** for a modern, real-time monitoring stack.  
-- **Tune rules** to avoid alert fatigue (focus on high-risk events).  
-
+### Link to audit rules from the SCA module:
+- [Ensure changes to system administration scope (sudoers) is collected](/Configuration%20Assesment/CIS%20Ubuntu%20Linux%2022.04%20LTS%20Benchmark%20v1.0.0./28597.md)
+-  [Ensure actions as another user are always logged.](/Configuration%20Assesment/CIS%20Ubuntu%20Linux%2022.04%20LTS%20Benchmark%20v1.0.0./28598.md)
+- [Ensure events that modify date and time information are collected](/Configuration%20Assesment/CIS%20Ubuntu%20Linux%2022.04%20LTS%20Benchmark%20v1.0.0./28599.md)
+- [Ensure events that modify the system's network environment](/Configuration%20Assesment/CIS%20Ubuntu%20Linux%2022.04%20LTS%20Benchmark%20v1.0.0./28600.md)
+- [Ensure events that modify user/group information are collected.](/Configuration%20Assesment/CIS%20Ubuntu%20Linux%2022.04%20LTS%20Benchmark%20v1.0.0./28601.md)
+- [Ensure session initiation information is collected.](/Configuration%20Assesment/CIS%20Ubuntu%20Linux%2022.04%20LTS%20Benchmark%20v1.0.0./28602.md)
+- [Ensure login and logout events are collected.](/Configuration%20Assesment/CIS%20Ubuntu%20Linux%2022.04%20LTS%20Benchmark%20v1.0.0./28603.md)
+- [Ensure events that modify the system's Mandatory Access Control](/Configuration%20Assesment/CIS%20Ubuntu%20Linux%2022.04%20LTS%20Benchmark%20v1.0.0./28604.md)
+- [Ensure the audit configuration is immutable.](/Configuration%20Assesment/CIS%20Ubuntu%20Linux%2022.04%20LTS%20Benchmark%20v1.0.0./28605.md)
 #### Reference:
 - [Wazuh documentation](https://documentation.wazuh.com/current/user-manual/capabilities/system-calls-monitoring/audit-configuration.html#configuration)
