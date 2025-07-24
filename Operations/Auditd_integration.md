@@ -27,18 +27,30 @@ The manager pushes agent.conf to all enrolled agents automatically.
 ### 2.1. Assign Agents to Groups
 1. Navigate to: **Management → Groups**
 
-2. Create a group (e.g., `linux-audit`) and assign relevant agents.
+2. Create a group (e.g., `audit`) and assign relevant agents.
 
 ### 2.2. Apply Group-Specific Audit Config
 1. Go to: **Management → Configuration → Groups**
 
-2. Select your group (`linux-audit`) and edit agent.conf:
+2. Select your group (`audit`) and edit agent.conf:
 
 ```xml
 <agent_config>
+<!-- Linux agents -->
   <localfile>
     <log_format>audit</log_format>
     <location>/var/log/audit/audit.log</location>
+  </localfile>
+<!-- MacOS linux -->
+  <localfile>
+    <log_format>syslog</log_format>
+    <location>/var/log/system.log</location>
+  </localfile>
+
+<!-- Windows Agents -->
+  <localfile>
+    <log_format>eventlog</log_format>
+    <location>Security</location>
   </localfile>
 </agent_config>
 ```
