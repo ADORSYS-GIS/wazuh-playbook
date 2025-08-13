@@ -121,7 +121,13 @@ sudo systemctl restart wazuh-manager
 
 ## Writing Custom Scripts
 
-Custom scripts allow tailored responses to threats, such as blocking an IP or logging an event. They must process JSON input from Wazuh and handle "add" or "delete" commands.
+Custom scripts let you decide what Wazuh does when it finds a threat, like blocking an IP or sending an alert. They read a message (in JSON format) from Wazuh and act based on whether it says “add” or “delete”
+
+Custom scripts should be placed in the appropriate directory based on the operating system:
+
+- Linux/Unix: `/var/ossec/active-response/bin` (create the script here, e.g., `custom-ar.py`).
+- macOS: `/Library/Ossec/active-response/bin` (create the script here).
+- Windows: `C:\Program Files (x86)\ossec-agent\active-response\bin` (create the script here, potentially as .exe for Python).
 
 ### Key Considerations
 
@@ -163,40 +169,67 @@ This script creates a file for an "add" command and removes it for a "delete" co
 import json
 import sys
 import os
+import logging
 
-# Read JSON from STDIN
-data = sys.stdin.read()
-json_data = json.loads(data)
+# Configure logging to Wazuh's log directory
+logging.basicConfig(
+    filename='/var/ossec/logs/active-responses.log',
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
 
-# Extract information
-command = json_data['command']
-parameters = json_data['parameters']
-alert = parameters['alert']
-rule_id = alert['rule']['id']
-src_ip = alert.get('srcip', 'unknown')
+def process_active_response():
+    try:
+        # Read JSON input from STDIN (sent by Wazuh)
+        input_data = sys.stdin.read().strip()
+        if not input_data:
+            logging.error("No input data received from Wazuh")
+            return
 
-# Log action
-with open('/var/ossec/logs/active-responses.log', 'a') as log:
-    log.write(f"Command: {command}, Rule: {rule_id}, IP: {src_ip}\n")
+        # Parse JSON
+        data = json.loads(input_data)
+        command = data.get('command', 'unknown')
+        parameters = data.get('parameters', {})
+        alert = parameters.get('alert', {})
+        rule_id = alert.get('rule', {}).get('id', 'unknown')
+        src_ip = alert.get('srcip', 'unknown')
 
-if command == 'add':
-    # Perform action (e.g., create a file)
-    with open("ar-test-result.txt", "w") as f:
-        f.write(f"Blocked IP {src_ip} for rule {rule_id}\n")
-elif command == 'delete':
-    # Revert action (e.g., delete the file)
-    if os.path.exists("ar-test-result.txt"):
-        os.remove("ar-test-result.txt")
+        # Log the received command and details
+        logging.info(f"Received command: {command}, Rule ID: {rule_id}, Source IP: {src_ip}")
 
-# For stateful responses, send control message
-if command == 'add':
-    control_message = {
-        "version": 1,
-        "origin": {"name": "custom-ar", "module": "active-response"},
-        "command": "check_keys",
-        "parameters": {"keys": [rule_id]}
-    }
-    print(json.dumps(control_message))
+        # Handle the command
+        if command == 'add':
+            action = f"Blocked IP {src_ip} for rule {rule_id}"
+            with open("/var/ossec/active-response/ar-test-result.txt", "w") as f:
+                f.write(f"{action}\n")
+            logging.info(action)
+
+            # Send control message for stateful response
+            control_msg = {
+                "version": 1,
+                "origin": {"name": "custom-ar", "module": "active-response"},
+                "command": "check_keys",
+                "parameters": {"keys": [rule_id]}
+            }
+            print(json.dumps(control_msg))
+        elif command == 'delete':
+            action = f"Unblocked IP {src_ip} for rule {rule_id}"
+            result_file = "/var/ossec/active-response/ar-test-result.txt"
+            if os.path.exists(result_file):
+                os.remove(result_file)
+                logging.info(action)
+            else:
+                logging.info(f"No action to undo for IP {src_ip}")
+        else:
+            logging.warning(f"Unknown command: {command}")
+
+    except json.JSONDecodeError as e:
+        logging.error(f"Failed to parse JSON: {e}")
+    except Exception as e:
+        logging.error(f"Unexpected error: {e}")
+
+if __name__ == "__main__":
+    process_active_response()
 ```
 
 ### Configuring the Script
