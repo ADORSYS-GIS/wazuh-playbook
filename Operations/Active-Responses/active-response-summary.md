@@ -251,8 +251,9 @@ Add to ossec.conf:
 </active-response>
 ```
 
-Restart services:
+**References**
+- https://documentation.wazuh.com/current/user-manual/capabilities/active-response/custom-active-response-scripts.html#stateful-active-response
 
-- Linux: `sudo systemctl restart wazuh-agent` and `sudo systemctl restart wazuh-manager`.
-- Windows: `Restart-Service -Name wazuh`.
+- https://documentation.wazuh.com/current/user-manual/capabilities/active-response/how-to-configure.html
+
 

@@ -99,3 +99,7 @@ Sets timeouts in minutes for repeat offenders. This is a comma-separated list of
 - **Monitor Logs**: Check `/var/ossec/logs/active-responses.log` for trigger verification.
 - **Restart Manager**: Run `systemctl restart wazuh-manager` after configuration changes.
 - **Debugging**: Use `/var/ossec/bin/ossec-logtest` to test rules and logs.
+
+
+**References**
+- https://documentation.wazuh.com/current/user-manual/reference/ossec-conf/active-response.html#repeated-offenders
