@@ -1,0 +1,81 @@
+# ✅ Deploy to Production Request
+
+
+## 📌 Summary
+
+Deployment a patched version of the `wazuh-helm`, where our custom Yara rules have been updated to trigger Yara and Yara active response actions' alerts on all supporting agents.
+
+---
+
+## 📦 Change Description
+
+- Feature(s) / Fix(es):
+  - [https://github.com/ADORSYS-GIS/wazuh/issues/237] Improve Yara's Incident Response Workflow
+
+- Related Commits / Merge Requests:
+  - [https://github.com/ADORSYS-GIS/wazuh-helm/pull/89] Add yara decoders and rules to create alerts for active response actions taken and their status 
+---
+
+## 🗂️ Environment
+
+- **Target Environment:** Production
+- **Affected Services:** 
+  - Wazuh Manager
+  - wazuh agents 
+
+- **Environment URLs:**
+  - [Dev Wazuh Cluster](https://dev.wazuh.adorsys.team/)
+  - [Prod Wazuh Cluster](https://wazuh.adorsys.team/)
+
+---
+
+## 🧪 Pre-Deployment Checklist
+
+- [ ] Code reviewed and approved
+- [ ] Infrastructure changes tested `Dev Wazuh Cluster`
+- [ ] Downtime expected? **yes, For about 4-8 minutes**, due to the application of new yara rules. 
+
+**Remark: We should add the update of the bash of macos machines in our setup-agent workflow** 
+
+---
+
+## 📅 Deployment Plan
+
+1. Backup the prod cluster
+2. Create prod release of `wazuh-helm` repo with Yara rule changes
+2. Trigger CI/CD deployment pipeline, by updating the `targetVersion` of wazuh in **ArgoCD** configurations, in the `main` branch of the `wazuh` repo
+3. Validate the health of the cluster
+4. Perform tests on the cluster
+
+---
+
+## 🧯 Rollback Plan (If Process Goes Astray)
+
+- Revert to last stable deployment.
+- Notify stakeholders
+- Time estimate for rollback: **4-10 minutes**
+
+---
+
+## 👥 Stakeholders & Notifications
+
+- **Dev Contact:** @ArmandMeppa
+- **Product Owner:** @yannicksiewe , @francis-pouatcha
+- **Slack Channel Notification:** #wazuh-team
+
+---
+
+## 🕐 Deployment Window
+
+- **Scheduled Date & Time:** 2025-09-01 @ 04:00pm (UTC+1)
+- **Approved by:** **Project team**
+
+---
+
+## ✅ Post-Deployment Validation
+
+- [ ] Wazuh dashboard accessible and functioning
+
+- [ ] Yara and Yara active response actions' alerts being properly generated and displayed on dashboard when triggered
+
+- [ ] Confirmation sent to stakeholders
