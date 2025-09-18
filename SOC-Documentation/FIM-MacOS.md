@@ -22,13 +22,12 @@ The following directories and files are monitored for changes to content, permis
       <directories>/Library/LaunchAgents</directories>
       <directories>/Library/StartupItems</directories>
       <directories>/Library/Application Support</directories>
-      <directories>/Library/Preferences</directories>
+      <directories>/Library/Preferences</directories
 
 <!-- 3.1.3. User-Space Directories -->
  <directories>/Users/*/Library/LaunchAgents</directories>
       <directories>/Users/*/Library/Application Support</directories>
-      <directories>/Users/*/Desktop</directories>
-      <directories>/Users/*/Downloads</directories>
+      
 <!-- 3.1.4. System Binaries & Configuration -->
 <directories>/etc</directories>
       <directories>/usr/bin</directories>
