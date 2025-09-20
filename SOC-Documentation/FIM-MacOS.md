@@ -22,12 +22,13 @@ The following directories and files are monitored for changes to content, permis
       <directories>/Library/LaunchAgents</directories>
       <directories>/Library/StartupItems</directories>
       <directories>/Library/Application Support</directories>
-      <directories>/Library/Preferences</directories
+      <directories>/Library/Preferences</directories>
 
 <!-- 3.1.3. User-Space Directories -->
  <directories>/Users/*/Library/LaunchAgents</directories>
- <directories>/Users/*/Library/Application Support</directories>
-      
+      <directories>/Users/*/Library/Application Support</directories>
+      <directories>/Users/*/Desktop</directories>
+      <directories>/Users/*/Downloads</directories>
 <!-- 3.1.4. System Binaries & Configuration -->
 <directories>/etc</directories>
       <directories>/usr/bin</directories>
@@ -98,7 +99,7 @@ Changes to the following files are alerted on, but the actual content (diff) is 
 <nodiff>/private/etc/ssl/private</nodiff>
 ```
 ###Wazuh Syscheck (FIM) Attributes
-     The attributes below define what to monitor, how to monitor it, and which changes should trigger alerts. Understanding these settings is key to building an effective FIM policy that balances security coverage with system performance.
+
 | Attribute             | What it does |
 |------------------------|--------------|
 | `<directories>`        | Defines which directories Wazuh should monitor for file changes. |
@@ -109,10 +110,10 @@ Changes to the following files are alerted on, but the actual content (diff) is 
 | `check_owner`          | Monitors changes in file ownership. |
 | `check_group`          | Monitors group ownership changes. |
 | `check_inode`          | Monitors inode changes (file metadata). |
+| `report_changes`       | Saves a copy of changed files for forensic analysis. |
+| `<realtime>`           | Enables immediate detection using OS-level hooks. |
 | `<frequency>`          | Defines how often (in seconds) Wazuh performs a periodic scan. |
 | `<scan_time>`          | Runs a scan at a specific time of day. |
 | `<scan_day>`           | Runs a scan on specific day(s) of the week. |
 | `<ignore>`             | Excludes certain files or directories from monitoring. |
 | `<nodiff>`             | Prevents storing copies of modified files (useful for sensitive data). |
-
-NOTE: For the full list of Syscheck (FIM) configuration options and advanced usage, see the [https://documentation.wazuh.com/current/user-manual/capabilities/file-integrity/basic-settings.html]
