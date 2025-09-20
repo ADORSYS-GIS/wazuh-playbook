@@ -26,7 +26,7 @@ The following directories and files are monitored for changes to content, permis
 
 <!-- 3.1.3. User-Space Directories -->
  <directories>/Users/*/Library/LaunchAgents</directories>
-      <directories>/Users/*/Library/Application Support</directories>
+ <directories>/Users/*/Library/Application Support</directories>
       
 <!-- 3.1.4. System Binaries & Configuration -->
 <directories>/etc</directories>
