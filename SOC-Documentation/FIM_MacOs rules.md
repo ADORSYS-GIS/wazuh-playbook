@@ -9,110 +9,216 @@ This configuration applies to all macOS systems enrolled in the organization’s
 It covers system-level, application-level, and user-level assets that attackers may target for compromise or persistence.
 
 ### Configuration Directives
-3.1. Monitored Directories & Files
 
-The following directories and files are monitored for content modifications, additions, deletions, permission changes, and ownership changes. Each monitored path is tied to custom Wazuh rules that trigger alerts at appropriate severity levels.
+#### 3.1. macOS FIM Rules
+
+The following XML rules define alerts for critical system areas:
 ```
-<!-- 3.1.1. Critical System Configurations -->
-<directories>/etc/passwd</directories>
-<directories>/etc/shadow</directories>
-<directories>/etc/sudoers</directories>
-<directories>/etc/hosts</directories>
+<!-- macOS File Integrity Monitoring Rules -->
+ <!-- Save as /var/ossec/etc/rules/macos_fim_rules.xml --> 
+ <group name="syscheck,macos,fim,">
 
-<!-- 3.1.2. System Launch Daemons & Agents -->
-<directories>/System/Library/LaunchDaemons</directories>
-<directories>/Library/LaunchDaemons</directories>
-<directories>/Library/LaunchAgents</directories>
+ <!-- System Configuration Files -->
+<rule id="100100" level="12">
+    <if_sid>550,554</if_sid>
+    <field name="file">/etc/passwd|/etc/shadow|/etc/sudoers|/etc/hosts</field>
+    <description>Critical system configuration file modified on macOS: $(file)</description>
+    <group>authentication,system_config,</group>
+</rule>
 
-<!-- 3.1.3. User Launch Agents -->
-<directories>/Users/*/Library/LaunchAgents</directories>
+<!-- Launch Daemons and Agents -->
+<rule id="100101" level="10">
+    <if_sid>550,554</if_sid>
+    <field name="file">/System/Library/LaunchDaemons|/Library/LaunchDaemons|/Library/LaunchAgents</field>
+    <description>Launch daemon/agent modified on macOS: $(file)</description>
+    <group>persistence,startup,</group>
+</rule>
 
-<!-- 3.1.4. Applications -->
-<directories>/Applications</directories>
+<!-- User Launch Agents -->
+<rule id="100102" level="8">
+    <if_sid>550,554</if_sid>
+    <field name="file">/Users/.*/Library/LaunchAgents</field>
+    <description>User launch agent modified on macOS: $(file)</description>
+    <group>persistence,user_startup,</group>
+</rule>
 
-<!-- 3.1.5. System Binaries -->
-<directories>/usr/bin</directories>
-<directories>/usr/sbin</directories>
-<directories>/bin</directories>
-<directories>/sbin</directories>
+<!-- Applications Directory -->
+<rule id="100103" level="7">
+    <if_sid>550</if_sid>
+    <field name="file">/Applications</field>
+    <description>Application modified in /Applications: $(file)</description>
+    <group>application_change,</group>
+</rule>
+<rule id="100104" level="10">
+    <if_sid>554</if_sid>
+    <field name="file">/Applications</field>
+    <description>New application added to /Applications: $(file)</description>
+    <group>new_application,</group>
+</rule>
 
-<!-- 3.1.6. Kernel Extensions -->
-<directories>/System/Library/Extensions</directories>
-<directories>/Library/Extensions</directories>
+<!-- System Binaries -->
+<rule id="100105" level="12">
+    <if_sid>550,554</if_sid>
+    <field name="file">/usr/bin|/usr/sbin|/bin|/sbin</field>
+    <description>System binary modified on macOS: $(file)</description>
+    <group>system_binary,</group>
+</rule>
 
-<!-- 3.1.7. SSH Configuration & Keys -->
-<directories>/etc/ssh</directories>
-<directories>/Users/*/.ssh</directories>
+<!-- Kernel Extensions -->
+<rule id="100106" level="12">
+    <if_sid>550,554</if_sid>
+    <field name="file">/System/Library/Extensions|/Library/Extensions</field>
+    <description>Kernel extension modified on macOS: $(file)</description>
+    <group>kernel_extension,</group>
+</rule>
 
-<!-- 3.1.8. Cron Jobs -->
-<directories>/usr/lib/cron/tabs</directories>
-<directories>/var/cron/tabs</directories>
+<!-- SSH Configuration -->
+<rule id="100107" level="10">
+    <if_sid>550,554</if_sid>
+    <field name="file">/etc/ssh</field>
+    <description>SSH configuration modified on macOS: $(file)</description>
+    <group>ssh_config,</group>
+</rule>
 
-<!-- 3.1.9. System & User Preferences -->
-<directories>/Library/Preferences</directories>
-<directories>/System/Library/Preferences</directories>
-<directories>/Users/*/Library/Preferences</directories>
+<!-- User SSH Keys -->
+<rule id="100108" level="8">
+    <if_sid>550,554</if_sid>
+    <field name="file">/Users/.*/.ssh</field>
+    <description>User SSH configuration modified on macOS: $(file)</description>
+    <group>ssh_keys,</group>
+</rule>
 
-<!-- 3.1.10. Package Managers -->
-<directories>/usr/local/bin</directories>
-<directories>/opt/homebrew/bin</directories>
+<!-- Cron Jobs -->
+<rule id="100109" level="8">
+    <if_sid>550,554</if_sid>
+    <field name="file">/usr/lib/cron/tabs|/var/cron/tabs</field>
+    <description>Cron job modified on macOS: $(file)</description>
+    <group>cron_job,</group>
+</rule>
 
-<!-- 3.1.11. Web Servers -->
-<directories>/etc/apache2</directories>
-<directories>/etc/nginx</directories>
-<directories>/usr/local/etc/nginx</directories>
+<!-- System Preferences -->
+<rule id="100110" level="6">
+    <if_sid>550</if_sid>
+    <field name="file">/Library/Preferences|/System/Library/Preferences</field>
+    <description>System preferences modified on macOS: $(file)</description>
+    <group>system_preferences,</group>
+</rule>
 
-<!-- 3.1.12. Database Configurations -->
-<directories>/usr/local/mysql</directories>
-<directories>/usr/local/var/mysql</directories>
+<!-- User Preferences -->
+<rule id="100111" level="4">
+    <if_sid>550</if_sid>
+    <field name="file">/Users/.*/Library/Preferences</field>
+    <description>User preferences modified on macOS: $(file)</description>
+    <group>user_preferences,</group>
+</rule>
 
-<!-- 3.1.13. Security Tools -->
-<directories>/usr/local/bin/nmap</directories>
-<directories>/usr/local/bin/wireshark</directories>
+<!-- Homebrew -->
+<rule id="100112" level="6">
+    <if_sid>550,554</if_sid>
+    <field name="file">/usr/local/bin|/opt/homebrew/bin</field>
+    <description>Homebrew binary modified on macOS: $(file)</description>
+    <group>homebrew,package_manager,</group>
+</rule>
 
-<!-- 3.1.14. System Libraries -->
-<directories>/System/Library/Frameworks</directories>
-<directories>/usr/lib</directories>
+<!-- Web Server Configurations -->
+<rule id="100113" level="8">
+    <if_sid>550,554</if_sid>
+    <field name="file">/etc/apache2|/etc/nginx|/usr/local/etc/nginx</field>
+    <description>Web server configuration modified on macOS: $(file)</description>
+    <group>web_server,</group>
+</rule>
 
-<!-- 3.1.15. Firewall Configuration -->
-<directories>/etc/pf.conf</directories>
+<!-- Database Configurations -->
+<rule id="100114" level="8">
+    <if_sid>550,554</if_sid>
+    <field name="file">/usr/local/mysql|/usr/local/var/mysql</field>
+    <description>Database configuration modified on macOS: $(file)</description>
+    <group>database,</group>
+</rule>
 
-<!-- 3.1.16. Certificate Stores -->
-<directories>/System/Library/Keychains</directories>
-<directories>/Library/Keychains</directories>
-```
-3.2. Exclusion List (Ignored Paths)
+<!-- Security Tools -->
+<rule id="100115" level="10">
+    <if_sid>550,554</if_sid>
+    <field name="file">/usr/local/bin/nmap|/usr/local/bin/wireshark</field>
+    <description>Security tool modified on macOS: $(file)</description>
+    <group>security_tools,</group>
+</rule>
 
-To minimize noise, volatile and non-critical paths are excluded. These include caches, logs, temporary data, and user-specific transient files.
-```
-<!-- 3.2.1. Volatile Data -->
-<ignore>/private/var/log</ignore>
-<ignore>/private/var/tmp</ignore>
-<ignore>/private/tmp</ignore>
-<ignore>/System/Library/Caches</ignore>
-<ignore>/Library/Caches</ignore>
-<ignore>/Users/*/Library/Caches</ignore>
-<ignore>/Users/*/Library/Logs</ignore>
+<!-- Suspicious File Extensions -->
+<rule id="100116" level="10">
+    <if_sid>554</if_sid>
+    <field name="file">\.sh$|\.py$|\.pl$|\.rb$</field>
+    <description>New script file created on macOS: $(file)</description>
+    <group>new_script,</group>
+</rule>
 
-<!-- 3.2.2. Dynamic State Files -->
-<ignore>/private/var/run</ignore>
-<ignore>/private/var/spool</ignore>
-<ignore>/System/Library/Caches/com.apple.kext.caches</ignore>
+<!-- Hidden Files in User Directories -->
+<rule id="100117" level="8">
+    <if_sid>554</if_sid>
+    <field name="file">/Users/.*/\.</field>
+    <description>New hidden file created in user directory on macOS: $(file)</description>
+    <group>hidden_file,</group>
+</rule>
 
-<!-- 3.2.3. Regex Exclusions -->
-<ignore type="sregex">\.log$|\.tmp$|\.cache$</ignore>
-<ignore type="sregex">/Users/.*/\.Trash</ignore>
-<ignore type="sregex">/Users/.*/\.DS_Store</ignore>
-```
-3.3. Sensitive Data Protection
+<!-- System Library Changes -->
+<rule id="100118" level="12">
+    <if_sid>550,554</if_sid>
+    <field name="file">/System/Library/Frameworks|/usr/lib</field>
+    <description>System library modified on macOS: $(file)</description>
+    <group>system_library,</group>
+</rule>
 
-Certain sensitive files are monitored for modifications, but the file diff content is suppressed to avoid exposing confidential data such as private keys and authentication secrets.
-```
-<nodiff>/etc/ssh/ssh_host_rsa_key</nodiff>
-<nodiff>/etc/ssh/ssh_host_dsa_key</nodiff>
-<nodiff>/etc/ssh/ssh_host_ecdsa_key</nodiff>
-<nodiff>/etc/ssh/ssh_host_ed25519_key</nodiff>
-<nodiff>/etc/master.passwd</nodiff>
-<nodiff>/Users/*/Library/Keychains</nodiff>
-<nodiff>/etc/ssl/private</nodiff>
+<!-- Firewall Configuration -->
+<rule id="100119" level="10">
+    <if_sid>550,554</if_sid>
+    <field name="file">/etc/pf.conf</field>
+    <description>Firewall configuration modified on macOS: $(file)</description>
+    <group>firewall,</group>
+</rule>
+
+<!-- Certificate Store -->
+<rule id="100120" level="8">
+    <if_sid>550,554</if_sid>
+    <field name="file">/System/Library/Keychains|/Library/Keychains</field>
+    <description>Certificate store modified on macOS: $(file)</description>
+    <group>certificates,</group>
+</rule>
+
+<!-- Composite Rules for Multiple Changes -->
+<rule id="100150" level="12" frequency="5" timeframe="300">
+    <if_matched_sid>100100</if_matched_sid>
+    <description>Multiple critical system files modified on macOS within 5 minutes</description>
+    <group>multiple_changes,attack,</group>
+</rule>
+
+<rule id="100151" level="10" frequency="10" timeframe="600">
+    <if_matched_sid>100103,100104</if_matched_sid>
+    <description>Multiple application changes detected on macOS within 10 minutes</description>
+    <group>multiple_app_changes,</group>
+</rule>
+
+<!-- File Deletion Rules -->
+<rule id="100160" level="10">
+    <if_sid>553</if_sid>
+    <field name="file">/Applications|/usr/bin|/usr/sbin</field>
+    <description>Critical file deleted on macOS: $(file)</description>
+    <group>file_deleted,</group>
+</rule>
+
+<!-- Permission Changes -->
+<rule id="100170" level="8">
+    <if_sid>550</if_sid>
+    <field name="changed_attributes">permission</field>
+    <description>File permissions changed on macOS: $(file)</description>
+    <group>permission_change,</group>
+</rule>
+
+<!-- Ownership Changes -->
+<rule id="100171" level="8">
+    <if_sid>550</if_sid>
+    <field name="changed_attributes">uid|gid</field>
+    <description>File ownership changed on macOS: $(file)</description>
+    <group>ownership_change,</group>
+</rule>
+
 ```
