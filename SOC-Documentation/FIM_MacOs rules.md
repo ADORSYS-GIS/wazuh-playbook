@@ -220,5 +220,5 @@ The following XML rules define alerts for critical system areas:
     <description>File ownership changed on macOS: $(file)</description>
     <group>ownership_change,</group>
 </rule>
-
+</group>
 ```
