@@ -103,7 +103,7 @@ Changes to the following files are alerted on, but the actual content (diff) is 
             <nodiff>/private/etc/ssl/private</nodiff>
             ```
 
- ###Wazuh Syscheck (FIM) Attributes
+ ### Wazuh Syscheck (FIM) Attributes
 The attributes below define what to monitor, how to monitor it, and which changes should trigger alerts. Understanding these settings is key to building an effective FIM policy that balances security coverage with system performance.
 
             | Attribute | What it does |
