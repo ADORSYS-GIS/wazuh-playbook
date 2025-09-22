@@ -48,7 +48,7 @@
                   <directories>/usr/local/apache2</directories>
                   <directories>/usr/local/nginx</directories>
 
-            <!-- 3.1.7. Critical Specific Files -->
+            <!-- 3.1.7. Critical Specific Files --> 
                   <directories>/private/etc/hosts</directories>
                   <directories>/private/etc/passwd</directories>
                   <directories>/private/etc/group</directories>
