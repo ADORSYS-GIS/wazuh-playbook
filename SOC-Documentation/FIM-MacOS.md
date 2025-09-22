@@ -1,15 +1,15 @@
-            ### Overview
+### Overview
 
-            This document defines the configuration for the organization's File Integrity Monitoring (FIM) system on macOS endpoints. The policy is designed to detect and alert on unauthorized modifications to critical system files, directories, and configuration data, providing a core defense against malware, unauthorized changes, and security breaches.
+This document defines the configuration for the organization's File Integrity Monitoring (FIM) system on macOS endpoints. The policy is designed to detect and alert on unauthorized modifications to critical system files, directories, and configuration data, providing a core defense against malware, unauthorized changes, and security breaches.
 
-            ### Scope
+### Scope
 
-            This configuration applies to all designated macOS systems enrolled in the corporate endpoint security management platform.
+This configuration applies to all designated macOS systems enrolled in the corporate endpoint security management platform.
 
-            ### Configuration Directives
+### Configuration Directives
 
-            3.1. Monitored Directories & Files
-            The following directories and files are monitored for changes to content, permissions, ownership, and other attributes.
+3.1. Monitored Directories & Files
+ The following directories and files are monitored for changes to content, permissions, ownership, and other attributes.
 
             ```
             <!-- 3.1.1. System Kernel & Core Services -->
@@ -55,9 +55,9 @@
                   <directories>/private/etc/sudoers</directories>
             ```
 
-            ### 3.2. Exclusion List (Ignored Paths)
+ ### 3.2. Exclusion List (Ignored Paths)
 
-            The following paths are excluded from monitoring to minimize noise from volatile, temporary, or non-essential data.
+ The following paths are excluded from monitoring to minimize noise from volatile, temporary, or non-essential data.
 
             ```
             <!-- 3.2.1. System Volatile Data -->
@@ -89,9 +89,9 @@
                   <ignore type="sregex">/private/var/vm/swap</ignore>
             ```
 
-            ### 3.3. Sensitive Data Protection
+### 3.3. Sensitive Data Protection
 
-            Changes to the following files are alerted on, but the actual content (diff) is suppressed to prevent exposure of sensitive information.
+Changes to the following files are alerted on, but the actual content (diff) is suppressed to prevent exposure of sensitive information.
 
             ```
             <nodiff>/private/etc/ssh/ssh_host_rsa_key</nodiff>
@@ -103,8 +103,9 @@
             <nodiff>/private/etc/ssl/private</nodiff>
             ```
 
-            ###Wazuh Syscheck (FIM) Attributes
-            The attributes below define what to monitor, how to monitor it, and which changes should trigger alerts. Understanding these settings is key to building an effective FIM policy that balances security coverage with system performance.
+ ###Wazuh Syscheck (FIM) Attributes
+The attributes below define what to monitor, how to monitor it, and which changes should trigger alerts. Understanding these settings is key to building an effective FIM policy that balances security coverage with system performance.
+
             | Attribute | What it does |
             |------------------------|--------------|
             | `<directories>` | Defines which directories Wazuh should monitor for file changes. |
@@ -121,4 +122,4 @@
             | `<ignore>` | Excludes certain files or directories from monitoring. |
             | `<nodiff>` | Prevents storing copies of modified files (useful for sensitive data). |
 
-            NOTE: For the full list of Syscheck (FIM) configuration options and advanced usage, see the [https://documentation.wazuh.com/current/user-manual/capabilities/file-integrity/basic-settings.html]
+NOTE: For the full list of Syscheck (FIM) configuration options and advanced usage, see the [https://documentation.wazuh.com/current/user-manual/capabilities/file-integrity/basic-settings.html]
