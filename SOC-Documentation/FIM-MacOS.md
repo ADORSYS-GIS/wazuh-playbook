@@ -11,6 +11,62 @@ This configuration applies to all designated macOS systems enrolled in the corpo
 3.1. Monitored Directories & Files
  The following directories and files are monitored for changes to content, permissions, ownership, and other attributes.
 
+ ```
+ <!-- MacOS Endpoints configuration -->
+  <agent_config os="Darwin">
+    <!-- File Integrity Monitoring (FIM) -->
+    <syscheck>
+      <file_limit>
+        <enabled>no</enabled>
+      </file_limit>
+      <disabled>no</disabled>
+      <frequency>60</frequency>
+      <!-- 4 hours -->
+      <directories>/etc/passwd,/etc/master.passwd</directories>
+      <directories>/Library/Preferences/SystemConfiguration/</directories>
+      <directories>/System/Library/CoreServices/boot.efi</directories>
+      <directories>/usr/bin,/usr/local/bin</directories>
+      <directories>/Library/LaunchDaemons/,/Library/LaunchAgents/</directories>
+      <directories>/tmp,/var/tmp</directories>
+      <!-- 3.1.1. System Kernel & Core Services -->
+      <directories>/System/Library/Extensions</directories>
+      <directories>/System/Library/LaunchDaemons</directories>
+      <directories>/System/Library/LaunchAgents</directories>
+      <directories>/System/Library/CoreServices</directories>
+      <directories>/System/Library/Frameworks</directories>
+      <!-- 3.1.2. Application & Service Persistence -->
+      <directories>/Applications</directories>
+      <directories>/Library/LaunchDaemons</directories>
+      <directories>/Library/LaunchAgents</directories>
+      <directories>/Library/StartupItems</directories>
+      <directories>/Library/Application Support</directories>
+      <directories>/Library/Preferences</directories>
+      <!-- 3.1.3. User-Space Directories -->
+      <directories>/Users/*/Library/LaunchAgents</directories>
+      <directories>/Users/*/Library/Application Support</directories>
+      <!-- 3.1.4. System Binaries & Configuration -->
+      <directories>/etc</directories>
+      <directories>/usr/bin</directories>
+      <directories>/usr/sbin</directories>
+      <directories>/bin</directories>
+      <directories>/sbin</directories>
+      <!-- 3.1.5. Security-Critical Assets -->
+      <directories>/private/etc/ssh</directories>
+      <directories>/private/etc/ssl</directories>
+      <directories>/usr/local/bin</directories>
+      <directories>/usr/local/sbin</directories>
+      <!-- 3.1.6. Web Services (Conditional) -->
+      <directories>/usr/local/apache2</directories>
+      <directories>/usr/local/nginx</directories>
+      <!-- 3.1.7. Critical Specific Files -->
+      <directories>/private/etc/hosts</directories>
+      <directories>/private/etc/passwd</directories>
+      <directories>/private/etc/group</directories>
+      <directories>/private/etc/sudoers</directories>
+```
+
+
+ 
  ### 3.2. Exclusion List (Ignored Paths)
 
  The following paths are excluded from monitoring to minimize noise from volatile, temporary, or non-essential data.
