@@ -75,12 +75,6 @@ sudo /var/ossec/bin/agent_groups -a -g web-servers
 sudo /var/ossec/bin/agent_groups -a -g db-servers
 ```
 
-**Option B: Using Web Interface**
-1. Go to **Management** → **Groups**
-2. Click **Add group**
-3. Enter group name (example: `web-servers`)
-4. Click **Save**
-
 ### **4.2. Adding Agents to Groups**
 
 **Using Command Line:**
@@ -91,13 +85,6 @@ sudo /var/ossec/bin/agent_groups -a -i 003 -g web-servers
 # Add multiple agents at once
 sudo /var/ossec/bin/agent_groups -a -i 004,005,006 -g web-servers
 ```
-
-**Using Web Interface:**
-1. Go to **Management** → **Groups**
-2. Click on your group name
-3. Click **Add agent**
-4. Select the agents you want
-5. Click **Add**
 
 ### **4.3. Creating Group Configurations**
 
@@ -280,6 +267,47 @@ sudo /var/ossec/bin/agent_control -i AGENT_ID -c
 ---
 
 **Need Help?**
-- Check agent logs: `/var/ossec/logs/ossec.log`
+- Check agent logsRhizome Technology Academy 2025
+
+Rhizome Technology is a forward-thinking technology organisation dedicated to cultivating the next generation of software developers and tech innovators.
+
+Through the Rhizome Technology Academy, we deliver comprehensive, structured learning programmes, personalised mentorship, and hands-on practical training designed to equip young talents with the skills and confidence needed to excel in today’s dynamic technology landscape.
+
+Our commitment to innovation and excellence empowers these future leaders to drive meaningful change within the tech ecosystem and beyond.
+
+Highlight of the Rhizome Technology Academy 2025
+
+Type: Training/Bootcamps
+Location: Virtual (Remote)
+Sponsor: Rhizome Technology Academy
+Duration: 6 months
+Benefits: Monthly stipend of ₦100,000, Access free preparatory online courses, Learning & Skill Development, Employment opportunities and lots more.
+Deadline: 10th October, 2025
+About the Rhizome Technology Academy 2025
+
+The Rhizome Technology Academy is a six-month paid internship designed to develop skills in Frontend Development, Backend Development, and User Interface Design.
+Participants will receive expert-led training, monthly stipends, and access to career-launching opportunities.
+Outstanding candidates will be offered job placements at the end of the programme.
+Entry Requirements
+
+Applicants must demonstrate a good foundational knowledge of their chosen learning path.
+Must have access to the necessary tools and internet to work remotely.
+Rhizome Technology Academy 2025 Benefits
+
+Learning & Skill Development
+Gain hands-on training in modern software development and UI/UX design.
+Access free preparatory online courses in HTML, CSS, JavaScript, Java, Algorithms, and UI/UX design.
+Build a strong foundation in your chosen career path (Frontend, Backend, or UI Design).
+Financial Support
+Receive a monthly stipend of ₦100,000 during the 6-month programme.
+Career Opportunities
+Participate in challenges, interviews, and projects that test your readiness.
+Outstanding graduates will be considered for employment opportunities with partner companies.
+Application Process
+
+Initiate Your Application – Select your learning path and meet the entry requirements.
+Embark on Learning Courses – Complete the recommended online courses.
+Undertake the Challenge – Showcase your skills through the assessment test.
+Secure an Interview Invitation – Successful candidates move on to interviews before final selection.: `/var/ossec/logs/ossec.log`
 - Check manager logs: `/var/ossec/logs/ossec.log` (on manager)
 - Verify agent is connected: `sudo /var/ossec/bin/agent_control -l`
