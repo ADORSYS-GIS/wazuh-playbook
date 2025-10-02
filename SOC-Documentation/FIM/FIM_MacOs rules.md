@@ -108,7 +108,7 @@ It aims to provide **advanced threat detection capabilities** while **minimizing
     <regex >recovery mode|recovery boot|csrutil</regex>
     <description >macOS: Recovery mode SIP operation - noise reduction</description>
     </rule>
-
+   
     <!-- Keychain Access with Noise Reduction -->
     <rule id="100011" level="8">
     <if_group >syslog</if_group>
@@ -376,7 +376,7 @@ It aims to provide **advanced threat detection capabilities** while **minimizing
     <!-- System Configuration Files with Noise Reduction -->
     <rule id="100054" level="10">
     <if_group >syscheck</if_group>
-    <field name="file">/etc|/private/etc</field>
+    <field name="file">/private/etc</field>
     <description >macOS FIM: System configuration file modified</description>
     <group
     >syscheck,file_integrity,pci_dss_11.5,gpg13_4.11,gdpr_IV_35.7.d,hipaa_164.312.c.1,nist_80
@@ -871,7 +871,7 @@ It aims to provide **advanced threat detection capabilities** while **minimizing
     <group
     >log_cleared,correlation,pci_dss_10.5.2,gpg13_10.1,gdpr_IV_30.1.g,hipaa_164.312.b,nist_
     800_53_AU.9,tsc_CC7.2</group>
-    </rule>
+    </rule>  
      <!-- Exclude known maintenance applications -->
     <rule id="100113" level="0">
     <if_sid >100105</if_sid>
@@ -885,7 +885,6 @@ It aims to provide **advanced threat detection capabilities** while **minimizing
     <regex >configuration change|syslog.*config|facility.*change</regex>
     <description >macOS: Syslog configuration change - noise reduction</description>
     </rule>
-
-
+    
 </group>
 ```
