@@ -1,5 +1,8 @@
 # **Wazuh Centralized Configuration Management Guide**
 
+**Document Version:** 2.2
+**Last Updated:** 2025-10-06
+
 ## **1. Introduction**
 
 This guide explains how to manage Wazuh agent configurations using centralized configuration management. Instead of configuring each agent individually, you can define settings on the Wazuh manager and distribute them to agent groups.
@@ -47,9 +50,37 @@ When an agent belongs to multiple groups, configurations are merged in this spec
 
 *Reference: Wazuh file structure based on official documentation*
 
-## **4. Step-by-Step Implementation**
+## **4.1. The Synchronization Process**
 
-### **4.1. Creating Agent Groups (Manager Side)**
+The synchronization of configuration between the manager and agents is a key automated process that ensures agents always operate with the latest configuration defined by the manager.
+
+1. **Checksum Comparison**: With every agent keepalive (typically every 10 seconds), the agent sends the manager a checksum of its current shared configuration.  
+2. **Update Detection**: The manager compares the agent's checksum with the checksum of the configuration that *should* apply to that agent's group(s).  
+3. **Pushing New Configuration**: If the checksums differ, the manager pushes the new and correct `agent.conf` file to the agent.  
+4. **Agent-Side Storage**: The agent receives this file and stores it in its shared configuration directory:  
+   - **Linux/macOS**: `/var/ossec/etc/shared/`  
+   - **Windows**: `C:\Program Files (x86)\ossec-agent\shared\`  
+5. **Automatic Restart**: By default, the agent automatically restarts or reloads the affected components to apply the new configuration. This behavior can be disabled in the local `ossec.conf` file if manual restarts are preferred.
+
+---
+
+## **4.2. Merging Local and Shared Configurations**
+
+On the agent, two primary configuration files work together to define its behavior:
+
+- **`/var/ossec/etc/ossec.conf`** – The agent's local and primary configuration file. It contains essential settings, including the manager's IP address within the `<client>` block.  
+- **`/var/ossec/etc/shared/agent.conf`** – The centralized configuration file received from the manager.
+
+When the agent starts, Wazuh’s internal **`merge.mg`** utility automatically combines these two files to produce the agent’s effective configuration.  
+The merge process follows these rules:
+
+- Settings from the shared `agent.conf` **take precedence** and will overwrite any conflicting settings in the local `ossec.conf`.  
+- Non-conflicting settings are **combined**, allowing both files to contribute (for example, monitoring multiple unique file paths).  
+- The `<client>` block in `ossec.conf` is **never overridden** by `agent.conf`. This safeguard ensures the agent always maintains a valid connection to its assigned manager, even if a remote configuration error occurs.
+
+## **5. Step-by-Step Implementation**
+
+### **5.1. Creating Agent Groups (Manager Side)**
 
 **Method 1: Using Wazuh CLI (Manager Server)**
 ```bash
@@ -59,8 +90,7 @@ sudo /var/ossec/bin/agent_groups -a -g linux
 sudo /var/ossec/bin/agent_groups -a -g macos
 
 # Verify group creation
-sudo /var/ossec/bin/agent_groups -l
-```
+sudo /var/ossec/bin/agent_groups -l```
 
 **Method 2: Using Wazuh Dashboard**
 1.  Navigate to **Agent management** → **Groups**
@@ -70,10 +100,9 @@ sudo /var/ossec/bin/agent_groups -l
 
 *Reference: [Agent Group Dashboard Management](https://documentation.wazuh.com/current/user-manual/agent/agent-management/grouping-agents.html#agent-group-dashboard)*
 
-### **4.2. Assigning Agents to Groups (Manager Side)**
+### **5.2. Assigning Agents to Groups (Manager Side)**
 
-**Using Wazuh CLI (Manager Server):**
-```bash
+**Using Wazuh CLI (Manager Server):**```bash
 # Assign single agent to group
 sudo /var/ossec/bin/agent_groups -a -i 003 -g linux
 
@@ -92,7 +121,7 @@ sudo /var/ossec/bin/agent_groups -l -i 003
 
 *Reference: [Assigning Agents to Groups](https://documentation.wazuh.com/current/user-manual/agent/agent-management/grouping-agents.html)*
 
-### **4.3. Creating Group Configurations (Manager Side)**
+### **5.3. Creating Group Configurations (Manager Side)**
 
 1.  **Access the shared configuration directory on Manager:**
     ```bash
@@ -124,9 +153,9 @@ sudo /var/ossec/bin/agent_groups -l -i 003
     sudo systemctl restart wazuh-manager
     ```
 
-## **5. Verified Configuration Examples**
+## **6. Verified Configuration Examples**
 
-### **5.1. Linux Server Monitoring Configuration**
+### **6.1. Linux Server Monitoring Configuration**
 
 **Manager-side file:** `/var/ossec/etc/shared/linux/agent.conf`
 
@@ -161,7 +190,7 @@ sudo /var/ossec/bin/agent_groups -l -i 003
 
 *Reference: [Log Data Collection Documentation](https://documentation.wazuh.com/current/user-manual/capabilities/log-data-collection/index.html)*
 
-### **5.2. Windows Server FIM Configuration**
+### **6.2. Windows Server FIM Configuration**
 
 **Manager-side file:** `/var/ossec/etc/shared/windows/agent.conf`
 
@@ -190,7 +219,7 @@ sudo /var/ossec/bin/agent_groups -l -i 003
 </agent_config>
 ```
 
-### **5.3. Default Base Configuration for All Agents**
+### **6.3. Default Base Configuration for All Agents**
 
 **Manager-side file:** `/var/ossec/etc/shared/default/agent.conf`
 
@@ -221,9 +250,9 @@ sudo /var/ossec/bin/agent_groups -l -i 003
 </agent_config>
 ```
 
-## **6. Verification and Testing**
+## **7. Verification and Testing**
 
-### **6.1. Manager-Side Verification Commands**
+### **7.1. Manager-Side Verification Commands**
 
 **Check group configurations (run on Manager):**
 ```bash
@@ -249,7 +278,7 @@ sudo tail -f /var/ossec/logs/ossec.log | grep -i "group\|config"
 sudo /var/ossec/bin/agent_control -l
 ```
 
-### **6.2. Agent-Side Verification Commands**
+### **7.2. Agent-Side Verification Commands**
 
 **Check agent status (run on Agent endpoints):**
 ```bash
@@ -275,7 +304,7 @@ logger "Wazuh configuration test message"
 sudo tail -f /var/ossec/logs/active-responses.log
 ```
 
-### **6.3. Dashboard Verification**
+### **7.3. Dashboard Verification**
 
 1.  **Check Group Assignments:**
     *   Navigate to **Management** → **Groups**
@@ -289,9 +318,9 @@ sudo tail -f /var/ossec/logs/active-responses.log
     *   Check **Security Events** for FIM and log collection alerts
     *   Filter by rule groups: `syscheck`, `web`
 
-## **7. Troubleshooting Common Issues**
+## **8. Troubleshooting Common Issues**
 
-### **7.1. Agent Not Receiving Configurations**
+### **8.1. Agent Not Receiving Configurations**
 
 **On Manager:**
 ```bash
@@ -314,7 +343,7 @@ sudo systemctl restart wazuh-agent
 sudo tail -f /var/ossec/logs/ossec.log
 ```
 
-### **7.2. Configuration Syntax Errors**
+### **8.2. Configuration Syntax Errors**
 
 **On Manager:**
 ```bash
@@ -325,7 +354,7 @@ sudo xmllint --noout /var/ossec/etc/shared/linux/agent.conf
 sudo grep -i "error\|warn" /var/ossec/logs/ossec.log | grep -i config
 ```
 
-### **7.3. Configuration Not Applying Correctly**
+### **8.3. Configuration Not Applying Correctly**
 
 **On Manager:**
 ```bash
@@ -339,30 +368,30 @@ sudo diff /var/ossec/etc/shared/default/agent.conf /var/ossec/etc/shared/linux/a
 sudo ls -la /var/ossec/etc/shared/
 ```
 
-## **8. Best Practices**
+## **9. Best Practices**
 
-### **8.1. Configuration Management**
+### **9.1. Configuration Management**
 -   **Use descriptive group names** (`web-servers`, `db-servers`, `windows-workstations`)
 -   **Start with default group** for universal settings applied to all agents
 -   **Test configurations in staging** before production deployment
 -   **Use version control** for configuration files
 -   **Document configuration changes** and reasons
 
-### **8.2. Performance Considerations**
+### **9.2. Performance Considerations**
 -   **Limit real-time FIM** to critical directories only
 -   **Use ignore patterns** for volatile files (logs, caches, temp files)
 -   **Monitor agent performance** after configuration changes
 -   **Schedule FIM scans** during off-peak hours when possible
 
-### **8.3. Security Practices**
+### **9.3. Security Practices**
 -   **Regularly audit configurations** for compliance
 -   **Use consistent naming conventions** for groups
 -   **Monitor configuration changes** to shared directories
 -   **Implement backup procedures** for configuration files
 
-## **9. Quick Reference Commands**
+## **10. Quick Reference Commands**
 
-### **9.1. Manager-Side Commands**
+### **10.1. Manager-Side Commands**
 ```bash
 # Group management
 sudo /var/ossec/bin/agent_groups -l                          # List all groups
@@ -380,7 +409,7 @@ sudo systemctl restart wazuh-manager                        # Restart manager
 sudo systemctl status wazuh-manager                         # Check manager status
 ```
 
-### **9.2. Agent-Side Commands**
+### **10.2. Agent-Side Commands**
 ```bash
 # Agent status and management
 sudo systemctl status wazuh-agent                           # Check agent status
@@ -393,11 +422,11 @@ sudo tail -f /var/ossec/logs/ossec.log                      # Real-time logs
 sudo grep "Configuration received" /var/ossec/logs/ossec.log # Config receipts
 ```
 
-## **10. Official Documentation References**
+## **11. Official Documentation References**
 
 -   [Agent Group Management](https://documentation.wazuh.com/current/user-manual/agent/agent-management/grouping-agents.html) - Comprehensive group management guide
 -   [Agent Group Dashboard](https://documentation.wazuh.com/current/user-manual/agent/agent-management/grouping-agents.html#agent-group-dashboard) - Web interface instructions
 -   [Log Data Collection](https://documentation.wazuh.com/current/user-manual/capabilities/log-data-collection/index.html) - Log monitoring configurations
 -   [Agent Groups Blog](https://wazuh.com/blog/agent-groups-and-centralized-configuration/) - Practical implementation examples
 
-This guide provides verified configurations and procedures based on official Wazuh documentation. 
+This guide provides verified configurations and procedures based on official Wazuh documentation.
