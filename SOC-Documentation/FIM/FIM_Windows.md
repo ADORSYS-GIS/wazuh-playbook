@@ -26,7 +26,7 @@ The agent configuration is divided into two primary sections: `<syscheck>` for F
     <!-- File Integrity Monitoring (FIM) -->
     <syscheck>
       <disabled>no</disabled>
-      <frequency>60</frequency>
+      <frequency>43200</frequency>
       <!-- 12 hours -->
       <scan_on_start>yes</scan_on_start>
       <alert_new_files>yes</alert_new_files>
