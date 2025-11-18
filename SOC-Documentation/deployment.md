@@ -6,7 +6,7 @@
 ```xml
 <rule id="600215" level="8">
   <if_sid>600208</if_sid>
-  <field name="file" type="pcre2">(?i)\.ps1$|\.vbs$|\.js$|\.wsf$|\.hta$</field>
+  <field name="file">(?i)\.ps1$|\.vbs$|\.js$|\.wsf$|\.hta$</field>
   <description>Script file added to startup directory</description>
   <group>fim,startup,persistence,script,</group>
 </rule>
@@ -55,7 +55,7 @@
 ```xml
 <rule id="600208" level="4">
   <if_sid>550</if_sid>
-  <field name="file" type="pcre2">(?i)\\Startup\\</field>
+  <field name="file">\\Startup\\</field>
   <description>File changed in startup directory: $(file)</description>
   <group>fim,startup,</group>
 </rule>
