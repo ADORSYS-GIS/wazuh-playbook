@@ -21,13 +21,13 @@ This configuration applies to all designated Windows Desktop and Server systems 
 The agent configuration is divided into two primary sections: `<syscheck>` for File Integrity Monitoring and `<localfile>` for log collection.
 
 ```xml
-  <!-- Windows Endpoints configuration -->
+    <!-- Windows Endpoints configuration -->
   <agent_config os="Windows">
     <!-- File Integrity Monitoring (FIM) -->
     <syscheck>
       <disabled>no</disabled>
-      <frequency>43200</frequency>
-      <!-- 12 hours -->
+      <frequency>21600</frequency>
+      <!-- 6 hours -->
       <scan_on_start>yes</scan_on_start>
       <alert_new_files>yes</alert_new_files>
       <auto_ignore frequency="10" timeframe="3600">no</auto_ignore>
@@ -76,7 +76,6 @@ The agent configuration is divided into two primary sections: `<syscheck>` for F
       <ignore>C:\Windows\Logs</ignore>
       <ignore>\\AppData\\Local\\Microsoft\\Windows\\Temporary Internet Files</ignore>
       <ignore>\\AppData\\Local\\Temp\\Low</ignore>
-      <ignore>C:\Users\*\AppData\Local\Temp</ignore>
     </syscheck>
     <!-- Log Collection -->
     <localfile>
