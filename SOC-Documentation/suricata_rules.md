@@ -153,4 +153,4 @@ They allow Suricata to function as an IDS (Intrusion Detection System) or IPS (I
 		<list field="srcip" lookup="address_match_key">etc/lists/whitelist_ips</list>
 		<description>Whitelisted IP from list</description>
 	</rule>
-</group>
+</group>```
