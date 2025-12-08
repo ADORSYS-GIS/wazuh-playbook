@@ -2,7 +2,7 @@
 Suricata rules are patterns and conditions that tell Suricata what network traffic to detect, how to classify it, and what alerts to generate.
 They allow Suricata to function as an IDS (Intrusion Detection System) or IPS (Intrusion Prevention System) by analyzing packets and identifying suspicious or malicious behavior.
 
-<group name="ids,suricata,">
+````<group name="ids,suricata,">
 	<!-- SQL Injection Detection -->
     <rule id="100001" level="10">
       <if_sid>86600</if_sid>
@@ -153,4 +153,4 @@ They allow Suricata to function as an IDS (Intrusion Detection System) or IPS (I
 		<list field="srcip" lookup="address_match_key">etc/lists/whitelist_ips</list>
 		<description>Whitelisted IP from list</description>
 	</rule>
-</group>
+</group>```
