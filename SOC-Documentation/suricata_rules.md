@@ -152,9 +152,9 @@ They allow Suricata to function as an IDS (Intrusion Detection System) or IPS (I
 		<user>admin|developer|qa_tester</user>
 		<description>Web attacks - Whitelisted testing accounts</description>
 	</rule>
-	<rule id="100122" level="0">
+	<!-- <rule id="100122" level="0">
 		<if_sid>100001,100002,100003</if_sid>
 		<list field="srcip" lookup="address_match_key">etc/lists/whitelist_ips</list>
 		<description>Whitelisted IP from list</description>
-	</rule>
+	</rule> -->
     </group>
