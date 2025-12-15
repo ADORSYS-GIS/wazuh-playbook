@@ -328,13 +328,13 @@ It aims to provide advanced threat detection capabilities while minimizing false
     
     <rule id="700055" level="0">
         <if_matched_sid>700053</if_matched_sid>
-        <match>mount|umount|ansible|puppet|chef</match>
+        <match>mount|umount|ansible|puppet|chef|snap</match>
         <description>Ignore filesystem table changes from trusted programs</description>
     </rule>
     
     <rule id="700056" level="12">
         <if_matched_sid>700053</if_matched_sid>
-        <match>!mount|!umount|!ansible|!puppet|!chef</match>
+        <match>!mount|!umount|!ansible|!puppet|!chef|!snap</match>
         <description>Unexpected filesystem table modification detected</description>
     </rule>
     
@@ -541,11 +541,11 @@ It aims to provide advanced threat detection capabilities while minimizing false
     </rule>
     -->
     
-    <rule id="700089" level="0">
+    <!-- <rule id="700089" level="0">
         <if_matched_sid>700088</if_matched_sid>
         <match>port 80|port 443</match>
         <description>Ignore inbound connections to allowed services</description>
-    </rule>
+    </rule> -->
     
     <!-- Detection of Privilege Escalation Commands -->
     <rule id="700090" level="12">
@@ -586,13 +586,13 @@ It aims to provide advanced threat detection capabilities while minimizing false
     
     <rule id="700096" level="0">
         <if_matched_sid>700094</if_matched_sid>
-        <match>ansible|puppet|chef</match>
+        <match>ansible|puppet|chef|snap</match>
         <description>Ignore hosts file changes from trusted automation tools</description>
     </rule>
     
     <rule id="700097" level="12">
         <if_matched_sid>700094</if_matched_sid>
-        <match>!ansible|!puppet|!chef</match>
+        <match>!ansible|!puppet|!chef|!snap</match>
         <description>Unexpected hosts file modification detected</description>
     </rule>
 </group>
