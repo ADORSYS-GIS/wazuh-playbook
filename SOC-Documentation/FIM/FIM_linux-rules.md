@@ -331,6 +331,12 @@ It aims to provide advanced threat detection capabilities while minimizing false
         <match>mount|umount|ansible|puppet|chef|snap</match>
         <description>Ignore filesystem table changes from trusted programs</description>
     </rule>
+
+    <rule id="700254" level="0">
+        <if_sid>700053</if_sid>
+        <field name="process_name" type="pcre2">(?i)(^|/)(snapd?|whatsapp(-desktop)?|whatsapp.*)$</field>
+        <description>Silenced: /etc/fstab modification triggered by snap/whatsapp</description>
+   </rule>
     
     <rule id="700056" level="12">
         <if_matched_sid>700053</if_matched_sid>
