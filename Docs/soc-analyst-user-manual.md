@@ -154,15 +154,15 @@ All searches are performed against the `wazuh-alerts-*` index pattern, which con
 - **Time Range Selection**
 The time picker limits search results to a specific period. Analysts must ensure the correct time range is selected when investigating incidents or validating alerts.
 
-Common usage includes:
-- Last 15 minutes: active incident response
-- Last 24 hours: daily SOC review
-- Custom range: forensic investigations
+- **Common usage includes:**
+  - Last 15 minutes: active incident response
+  - Last 24 hours: daily SOC review
+  - Custom range: forensic investigations
 
 - **Searching and filtering**
 The search bar supports structured queries to filter alerts by fields such as agent name, rule ID, severity level, event ID, or IP address.
 
-Analysts can search specific fields using the format:
+**Analysts can search specific fields using the format:**
 
 `field_name:value`
 
@@ -189,7 +189,7 @@ The histogram displays the number of alerts over time, helping analysts identify
 - **Event Details**
 Each search result includes detailed alert information such as agent data, rule metadata, and the raw log. This information is used for root cause analysis, rule tuning, and evidence collection.
 
- Operational Use Cases
+#### Operational Use Cases
 Searches are commonly used for:
 - Incident investigation
 - Threat hunting
@@ -200,6 +200,8 @@ Searches are commonly used for:
 
 
 **REF:** https://wazuh.com/blog/filtering-security-data-with-the-wazuh-query-language/
+
+[Wazuh documentation on Search](https://wazuh.com/blog/filtering-security-data-with-the-wazuh-query-language/)
 
 # 4. Reporting
 **Overview**
@@ -220,21 +222,21 @@ Reports are generated from:
 
 Reports are used to:
 
-Communicate incidents
+- Communicate incidents
 
-Summarize security posture
+- Summarize security posture
 
-Reports are typically generated from filtered views.
+- Reports are typically generated from filtered views.
 
 ### 4.2 Creating Reports from Dashboards
 
 Analysts can:
 
-Use saved searches
+- Use saved searches
 
-Capture visualizations
+- Capture visualizations
 
-Export tables
+- Export tables
 
 Reports are usually prepared externally (PDF, Excel, ticket systems).
 
@@ -266,7 +268,7 @@ Supported formats include:
 **5.3 Common Export Use Cases**
 
 - Attach alert data to incident tickets
-
+Operational Use Cases
 - Share findings with IR or management
 
 - Provide audit evidence
