@@ -10,22 +10,77 @@ Screenshots are included to illustrate key functions and may vary slightly based
 
 This is the **Heads-Up Display** for the SOC team. It provides a high-level summary of the security state of your entire network.
 
-**Alert Severity Monitoring:** This panel categorizes all security events triggered in the last 24 hours.
+## 1.1 Agent Summary
 
-**Critical/High (Levels 12-15+):** These are priority-one threats that require immediate action.
+The Agent Summary provides a real-time overview of the connectivity status of all Wazuh agents registered to the manager.
 
-**Medium (Levels 7-11):** Events like multiple failed logins or policy violations that need investigation.
+### Fields explained
+**1.i Active (3)**
 
-**Low (Levels 0-6) :** Standard activity logs used for auditing and trend analysis.
+- Number of agents that are:
 
-#### a- Navigation Sidebar (Explore Menu)
-**Discover:** Where you go to hunt for specific logs.
+   - Properly installed
 
-**Reporting:** Where you generate official documents for stakeholders.
+   - Connected to the Wazuh manager
 
-**Agents:** Shows the health of the devices you are monitoring (e.g., if a server goes offline).
+   - Sending logs and security events
+
+---
+
+**1.ii Disconnected (14)**
+
+- Agents that:
+
+   - Were previously registered
+
+   - Are currently not communicating with the manager
+
+---
+
+## 1.2 Last 24 Hours Alerts
+
+This panel summarizes all alerts generated in the last 24 hours, grouped by severity level, based on Wazuh rule levels.
+
+
+**Severity levels explained**
+
+Wazuh uses rule levels (0–15) to classify alert severity.
+
+**2.i Critical severity** – 0
+
+- Rule level: 15 or higher
+
+   - No critical alerts detected
+
+   - Indicates no confirmed severe security incidents
+
+---
+
+**2.ii High severity** – 0
+
+- Rule level: 12 to 14
+
+   - Represents serious security events that may require investigation.
+
+---
+
+**2.iii Medium severity** – 16
+
+- Rule level: 7 to 11
+
+   - Common alerts that indicate potential issues, but not immediate compromise.
+
+---
+**2.iv Low severity** – 308
+
+- Rule level: 0 to 6
+
+    - Informational and low-risk events.
+
+---
 
 ![alt text](image-1.png)
+
 
 # 2. Wazuh Dashboard –  (Field-by-Field Explanation)
 
@@ -33,21 +88,21 @@ This screen belongs to **Wazuh Dashboard (OpenSearch Dashboards)** and shows the
 
 ---
 
-## 1. Left Sidebar (Main Navigation)
+## 2.1. Left Sidebar (Main Navigation)
 
-### Recently viewed
+### i. Recently viewed
 - Displays pages you accessed recently
 - Provides quick navigation shortcuts
 
 ---
 
-### Home
+### ii. Home
 - Main landing page of Wazuh Dashboard
 - Shows general system overview and shortcuts
 
 ---
 
-### Explore
+### iii. Explore
 - Used to search, filter, and analyze logs
 - Equivalent to OpenSearch **Discover**
 - Common use cases:
@@ -57,7 +112,7 @@ This screen belongs to **Wazuh Dashboard (OpenSearch Dashboards)** and shows the
 
 ---
 
-### Endpoint security
+### iv. Endpoint security
 - Focuses on endpoint-level protection
 - Includes:
   - File Integrity Monitoring (FIM)
@@ -68,7 +123,7 @@ This screen belongs to **Wazuh Dashboard (OpenSearch Dashboards)** and shows the
 
 ---
 
-### Threat intelligence
+### v .Threat intelligence
 - Correlates events with known threat indicators
 - Detects:
   - Malicious IPs
@@ -77,7 +132,7 @@ This screen belongs to **Wazuh Dashboard (OpenSearch Dashboards)** and shows the
 
 ---
 
-### Security operations
+### vi. Security operations
 - Central Security Operations Center (SOC) view
 - Used for:
   - Monitoring alerts
@@ -86,7 +141,7 @@ This screen belongs to **Wazuh Dashboard (OpenSearch Dashboards)** and shows the
 
 ---
 
-### Cloud security
+### vii. Cloud security
 - Security monitoring for cloud platforms:
   - AWS
   - Azure
@@ -97,7 +152,7 @@ This screen belongs to **Wazuh Dashboard (OpenSearch Dashboards)** and shows the
 
 ---
 
-### Agents management
+### viii.Agents management
 - Used to manage Wazuh agents
 - Functions include:
   - Viewing agent status
@@ -107,7 +162,7 @@ This screen belongs to **Wazuh Dashboard (OpenSearch Dashboards)** and shows the
 
 ---
 
-### Server management
+### ix. Server management
 - Administrative view for Wazuh managers
 - Includes:
   - Cluster status
@@ -116,7 +171,7 @@ This screen belongs to **Wazuh Dashboard (OpenSearch Dashboards)** and shows the
 
 ---
 
-### Indexer management
+### x. Indexer management
 - Manages OpenSearch indices
 - Used for:
   - Index health monitoring
@@ -142,64 +197,71 @@ This screen belongs to **Wazuh Dashboard (OpenSearch Dashboards)** and shows the
 
 ![alt text](image-8.png)
 
-- **REF**:https://documentation.wazuh.com/current/user-manual/wazuh-dashboard/navigating-the-wazuh-dashboard.html
+
+- [Wazuh documentation on Dashboard](https://documentation.wazuh.com/current/user-manual/wazuh-dashboard/navigating-the-wazuh-dashboard.html)
 
 # 3. Searches (Discover View)
 
 The Discover view allows SOC analysts to search, filter, and analyze security alerts collected by Wazuh. Searches are a core investigation tool used for incident response, threat hunting, rule validation, and reporting.
 
-- **Index Pattern**
+- **3.1 Index Pattern**
 All searches are performed against the `wazuh-alerts-*` index pattern, which contains security alerts generated by Wazuh agents across the environment.
+---
 
-- **Time Range Selection**
+- **3.2 Time Range Selection**
 The time picker limits search results to a specific period. Analysts must ensure the correct time range is selected when investigating incidents or validating alerts.
+---
 
-- **Common usage includes:**
+- **3.3 Common usage includes:**
   - Last 15 minutes: active incident response
   - Last 24 hours: daily SOC review
   - Custom range: forensic investigations
+  ---
 
-- **Searching and filtering**
+- **3.4 Searching and filtering**
 The search bar supports structured queries to filter alerts by fields such as agent name, rule ID, severity level, event ID, or IP address.
-
+---
 **Analysts can search specific fields using the format:**
 
 `field_name:value`
 
 **Common fields:**
 
-- agent.name
+     - agent.name
 
-- agent.id
+     - agent.id
 
-- rule.id
+     - rule.id
 
-- rule.level
+     - rule.level
 
-- data.srcip
+     - data.srcip
 
-- data.user
+     - data.user
 
-- **Filters**
+
+---
+
+ - **3.5 Filters**
 Filters provide an intuitive way to narrow results without manual queries. Multiple filters can be combined and easily removed.
 
-- **Event Timeline**
+---
+
+- **3.6 Event Timeline**
 The histogram displays the number of alerts over time, helping analysts identify spikes, abnormal activity, or attack windows.
-
-- **Event Details**
+---
+- **3.7 Event Details**
 Each search result includes detailed alert information such as agent data, rule metadata, and the raw log. This information is used for root cause analysis, rule tuning, and evidence collection.
-
+---
 #### Operational Use Cases
 Searches are commonly used for:
 - Incident investigation
 - Threat hunting
 - Rule testing and false-positive reduction
 - Report generation and data export
-
+---
 ![alt text](image-4.png)
 
-
-**REF:** https://wazuh.com/blog/filtering-security-data-with-the-wazuh-query-language/
 
 [Wazuh documentation on Search](https://wazuh.com/blog/filtering-security-data-with-the-wazuh-query-language/)
 
@@ -215,6 +277,7 @@ Reports are generated from:
 - Dashboards and visualizations
 
 - Filtered alert data from the Discover view
+---
 
 ![alt text](image-5.png)
 
@@ -225,8 +288,7 @@ Reports are used to:
 - Communicate incidents
 
 - Summarize security posture
-
-- Reports are typically generated from filtered views.
+---
 
 ### 4.2 Creating Reports from Dashboards
 
@@ -240,20 +302,21 @@ Analysts can:
 
 Reports are usually prepared externally (PDF, Excel, ticket systems).
 
-**REF:** https://documentation.wazuh.com/current/user-manual/wazuh-dashboard/navigating-the-wazuh-dashboard.html
+---
 
-
+- [wazuh documentation on reporting]( https://documentation.wazuh.com/current/user-manual/wazuh-dashboard/navigating-the-wazuh-dashboard.html
+)
 
 # 5. Exporting Data
 **5.1 What Export Does**
 
-The Export function allows analysts to download currently visible and filtered data.
+The Export function allows analysts to download  data.
 
-Key characteristics:
+ Key characteristics:
 
-- Manual, UI-based
+   - Manual, UI-based
 
-- Honors filters and time range
+   - Honors filters and time range
 
 **5.2 Export Formats**
 
@@ -275,6 +338,8 @@ Operational Use Cases
 
 - Exports are not suitable for automation or large datasets.
 
+
+
 ![alt text](image-7.png)
 
-**REF:** https://documentation.wazuh.com/current/index.html
+- [wazuh documentation on Export]( https://documentation.wazuh.com/current/index.html)
