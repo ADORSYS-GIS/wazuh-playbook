@@ -1,43 +1,11 @@
 # Azure Wazuh Rules Documentation
 
-## Document Information
-- **Version:** 1.0
-- **Last Updated:** January 14, 2026
-- **Purpose:** Comprehensive reference for Azure monitoring rules in Wazuh
-
----
-
 ## Overview
+This document provides the rule configurations for monitoring Azure environments using Wazuh. It covers Microsoft Entra ID authentication events and Azure Activity Log operations, focusing on high-signal security alerts and noise reduction.
 
-This document contains all Azure monitoring rules for Wazuh SOC, covering Microsoft Entra ID (formerly Azure AD) authentication events and Azure Activity Log (control plane) operations.
-
-### Key Features
-- **Noise Reduction:** Intelligent filtering of benign events
-- **Risk-Based Alerting:** Focus on high-signal security events
-- **Correlation Rules:** Detect brute-force and distributed attacks
-- **Compliance Coverage:** IAM changes, logging tampering, privilege escalation
-
-### Dependencies
-- **Parent Rule ID:** 87802 (Entra ID events)
-- **Location Filter:** "Azure" (Activity Log events)
-
----
-
-### Rule ID Ranges
-| Range 		| Purpose 							 |
-|---------------|------------------------------------|
-| 110010-110012 | Noise reduction (level 0) 		 |
-| 110020-110022 | Failed authentication + correlation|
-| 110030-110035 | High-signal Entra ID alerts 		 |
-| 110100-110199 | Azure Activity Log alerts 		 |
-
-### Alert Levels
-| Level | Severity 		| Examples 									  |
-|-------|---------------|---------------------------------------------|
-| 0 	| Silenced 		| Normal sign-ins, allowlisted IPs 			  |		  
-| 5-7 	| Low-Medium 	| Single auth failures, CA issues 			  |
-| 8-10 	| Medium-High 	| Device risks, policy changes 				  |	
-| 11-13 | High-Critical | IAM changes, credential access, brute-force |
+### Key Monitoring Areas
+- **Entra ID**: Authentication failures, risky sign-ins, and legacy protocol usage.
+- **Activity Log**: IAM changes, network security modifications, and resource tampering.
 
 ---
 
@@ -129,8 +97,6 @@ This document contains all Azure monitoring rules for Wazuh SOC, covering Micros
 	
 	<!-- =========================================================
 	ENTRA ID AUTH FAILURE + CORRELATION (NOISE-REDUCED)
-	Uses frequency/timeframe + ignore to reduce spam.
-	Uses same_field to correlate on dynamic JSON fields.
 	========================================================= -->
 	
 	<!-- Base: One failed sign-in (keep this LOW to avoid noise) -->
@@ -159,24 +125,7 @@ This document contains all Azure monitoring rules for Wazuh SOC, covering Micros
 	
 	<!-- =========================================================
 	AZURE ACTIVITY LOG (ARM / CONTROL PLANE) - HIGH VALUE ALERTS
-	IMPORTANT:
-	- Field names depend on your Log Analytics query output.
-	- These rules assume common AzureActivity columns like:
-	  OperationNameValue, ActivityStatusValue, Caller, CallerIpAddress, 
-	  ResourceId, SubscriptionId.
-	- If your schema differs, rename fields accordingly.
 	========================================================= -->
-	
-	<!-- OPTIONAL SILENCE: Control-plane "read" operations are noisy.
-	     Uncomment if you ingest lots of read operations and want them suppressed. -->
-	<!--
-	<rule id="110100" level="0">
-		<location>Azure</location>
-		<field name="OperationNameValue" type="pcre2">\/read$</field>
-		<description>Azure: Control-plane read operation - silenced</description>
-		<group>azure_activity,noise</group>
-	</rule>
-	-->
 	
 	<!-- ALERT: Role assignment created/updated (privilege changes) -->
 	<rule id="110110" level="13">
