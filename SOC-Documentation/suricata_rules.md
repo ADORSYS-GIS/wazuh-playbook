@@ -81,7 +81,7 @@ They allow Suricata to function as an IDS (Intrusion Detection System) or IPS (I
   <rule id="100009" level="12">
     <if_sid>86601</if_sid>
     <field name="alert.severity">1</field>
-    <description>Suricata high severity alert (1): ${alert.signature}</description>
+    <description>Suricata high severity alert (1): $(alert.signature)</description>
     <group>suricata,high_severity,</group>
   </rule>
 
@@ -89,7 +89,7 @@ They allow Suricata to function as an IDS (Intrusion Detection System) or IPS (I
   <rule id="100010" level="7">
     <if_sid>86601</if_sid>
     <field name="alert.severity">2</field>
-    <description>Suricata medium severity alert (2): ${alert.signature}</description>
+    <description>Suricata medium severity alert (2): $(alert.signature)</description>
     <group>suricata,medium_severity,</group>
   </rule>
 
@@ -97,7 +97,7 @@ They allow Suricata to function as an IDS (Intrusion Detection System) or IPS (I
   <rule id="100011" level="3">
     <if_sid>86601</if_sid>
     <field name="alert.severity">3</field>
-    <description>Suricata low severity alert (3): ${alert.signature}</description>
+    <description>Suricata low severity alert (3): $(alert.signature)</description>
     <group>suricata,low_severity,</group>
   </rule>
 
@@ -194,7 +194,7 @@ They allow Suricata to function as an IDS (Intrusion Detection System) or IPS (I
   <!-- DNS Tunneling Whitelists -->
   <rule id="100115" level="0">
     <if_sid>100008</if_sid>
-    <regex>.*\.cloudfront\.net|.*\.akamai\.net</regex>
+    <hostname>.*\.cloudfront\.net|.*\.akamai\.net</hostname>
     <description>DNS Tunneling - Whitelisted CDN domains (using regex for wildcard support)</description>
   </rule>
 
