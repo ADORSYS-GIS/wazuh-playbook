@@ -4,6 +4,7 @@ This document describes a custom Wazuh rule group for YARA malware detections.
 It defines a hierarchy of rules for classifying, correlating, and escalating alerts based on YARA scan results.
 
 ```
+
 <group name="yara,malware,"> 
   <!-- Base YARA rule --> 
   <rule id="108000" level="0"> 
@@ -87,7 +88,7 @@ It defines a hierarchy of rules for classifying, correlating, and escalating ale
   <!-- YARA scan errors --> 
   <rule id="108011" level="5"> 
     <if_sid>108000</if_sid> 
-    <match>Error|Failed</match> 
+    <match>Error|Failed|wazuh-yara: DEBUG - Yara scan failed for</match> 
     <description>YARA scan error occurred</description> 
   </rule> 
  
@@ -105,10 +106,11 @@ It defines a hierarchy of rules for classifying, correlating, and escalating ale
         <description>Yara action '$(yara_action)', completed with success on file: $(yara_scanned_file)</description>
     </rule>
     
- <rule id="108014" level="7">
+    <rule id="108014" level="7">
         <if_sid>108000</if_sid>
         <field name="log_type">ERROR</field>
         <description>Yara action: '$(yara_action)', failed on file: $(yara_scanned_file)</description>
     </rule>
-</group> 
+</group>  
+
 ````
