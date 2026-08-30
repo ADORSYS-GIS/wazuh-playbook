@@ -12,7 +12,7 @@ This configuration applies to all designated Linux systems enrolled in the corpo
 The following directories and files are monitored for changes to content, permissions, ownership, and other attributes:
 
 ```
-  <!-- Linux Endpoints configuration -->
+    <!-- Linux Endpoints configuration -->
   <agent_config os="Linux">
     <!-- File Integrity Monitoring (FIM) -->
     <syscheck>
@@ -20,7 +20,7 @@ The following directories and files are monitored for changes to content, permis
         <enabled>no</enabled>
       </file_limit>
       <disabled>no</disabled>
-      <frequency>60</frequency>
+      <frequency>14400</frequency>
       <!-- 4 hours -->
       <directories>/etc/passwd,/etc/shadow,/etc/group</directories>
       <directories>/etc/ssh/sshd_config,~/.ssh/authorized_keys</directories>
@@ -85,5 +85,6 @@ The following directories and files are monitored for changes to content, permis
       <location>/var/log/suricata/eve.json</location>
     </localfile>
   </agent_config>
+
 
 ```
