@@ -34,7 +34,7 @@ SAST tools parse the codebase and apply rule engines, semantic pattern matching,
 | Type | Full Name | Methodology | Execution Stage | Ecosystem Scope |
 | :--- | :--- | :--- | :--- | :--- |
 | **SAST** | Static Application Security Testing | Source code & configuration analysis (White-box) | CI Pipeline (Pull Requests & Pushes) | **Active & Enforced** |
-| **DAST** | Dynamic Application Security Testing | Outside-in runtime vulnerability testing (Black-box) | Staging / Deployed Environments | Future Roadmap (#549) |
+| **DAST** | Dynamic Application Security Testing | Outside-in runtime vulnerability testing (Black-box) | Staging / Deployed Environments | Future Roadmap ([#549](https://github.com/ADORSYS-GIS/wazuh/issues/549)) |
 | **IAST** | Interactive Application Security Testing | Runtime agent monitoring inside test execution | Integration Testing | Out of Scope |
 
 ---
@@ -53,7 +53,7 @@ The integration leverages shared, version-pinned reusable workflows from `ADORSY
 - Maintain a single, version-controlled set of reusable workflow templates.
 
 ### Non-Goals / Out of Scope
-- DAST and IAST testing (tracked separately under roadmap epic #549).
+- DAST and IAST testing (tracked separately under roadmap epic [#549](https://github.com/ADORSYS-GIS/wazuh/issues/549)).
 - Deep scanning of third-party vendor libraries beyond standard dependency checks.
 - Replacing peer security reviews (SAST complements human code review).
 
@@ -254,5 +254,5 @@ To onboard an additional repository into the Wazuh SAST ecosystem:
 ## 10. References & Related Documentation
 
 - **Reusable CI Templates**: [`ADORSYS-GIS/adorsys-ci-cd-templates`](https://github.com/ADORSYS-GIS/adorsys-ci-cd-templates)
-- **Master Epic**: `ADORSYS-GIS/wazuh#549` / `ADORSYS-GIS/wazuh#2190`
+- **Master Epic**: [ADORSYS-GIS/wazuh#549](https://github.com/ADORSYS-GIS/wazuh/issues/549) / [ADORSYS-GIS/wazuh#2190](https://github.com/ADORSYS-GIS/wazuh/issues/2190)
 - **Internal SonarQube Server**: `https://sonarqube.sol-adorsys.com`
