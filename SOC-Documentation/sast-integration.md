@@ -2,182 +2,257 @@
 **Wazuh Ecosystem Central Specification & Compliance Manual**
 
 > **Document Status**: Approved  
+> **Classification**: Internal / ISO 27001 Operational Baseline  
 > **Target Audience**: SIEM Engineers, Wazuh Contributors, Security Auditors  
 > **Source**: Centralized Wazuh Security Operations
 
 ---
 
-# SAST Integration Wazuh Ecosystem
-
 ## 1. What is SAST?
 
-Static Application Security Testing (SAST) is a type of security testing that analyzes an application's source code, bytecode, or binaries without executing the application. It is sometimes called "white-box testing" because the scanner has full visibility into the code being analyzed.
+**Static Application Security Testing (SAST)** is a white-box security testing methodology that analyzes source code, bytecode, or configuration files without executing the application.
 
-SAST tools work by parsing the code and applying a set of rules, patterns, and data-flow analyses to detect security weaknesses. They look for things like:
+SAST tools parse the codebase and apply rule engines, semantic pattern matching, and data-flow analyses to detect vulnerabilities early in the software development lifecycle (SDLC). Common classes of defects identified include:
 
-- Injection flaws: SQL injection, command injection, LDAP injection, XSS.
-- Insecure deserialization and path traversal.
-- Hardcoded secrets: passwords, API keys, tokens left in source.
-- Weak cryptography: weak hashing algorithms, insecure random number generation.
-- Insecure configuration: overly permissive permissions, missing security headers.
-- Unsafe dependencies / API misuse calling dangerous functions or libraries incorrectly.
-- Resource leaks and error-handling flaws that could be exploited.
+- **Injection Flaws**: SQL, Command, LDAP, and Cross-Site Scripting (XSS).
+- **Insecure Deserialization & Path Traversal**.
+- **Hardcoded Secrets**: Embedded API tokens, passwords, and private keys.
+- **Cryptographic Weaknesses**: Insecure random number generators, deprecated cipher suites, and weak hashing algorithms.
+- **Insecure Configurations**: Overly permissive IAM/file permissions, exposed ports, and missing security headers.
+- **Dangerous API Misuse**: Unchecked buffer operations, unsafe shell commands, and deprecated library functions.
+- **Error Handling & Resource Leaks**: Unhandled exceptions, memory leaks, and unclosed system handles.
 
-Because SAST runs on the code itself, it can find issues early in the software development lifecycle (SDLC), ideally at the moment a developer writes or commits code , which is far cheaper and safer to fix than discovering them in production.
-
-### Why SAST matters
-
-- Shift-left security. SAST moves security testing to the earliest possible point in the pipeline, catching vulnerabilities before they reach build, test, or production environments.
-- Cost reduction. Fixing a vulnerability during development costs a fraction of fixing it after deployment. Industry data consistently shows that defects found early are dramatically cheaper to remediate.
-- Comprehensive coverage. Unlike dynamic testing, SAST can inspect every code path, including ones that are hard to reach at runtime, and can analyze code that isn't even executed yet.
-- Developer feedback. Integrated into CI, SAST gives developers immediate, inline feedback on the exact line of code that needs attention.
-- Compliance. Many standards (OWASP Top 10, CWE Top 25, PCI DSS, OWASP ASVS, STIG) require evidence of static analysis. SAST provides auditable scan results.
-- Consistency and scale. Automated scans apply the same security bar to every repository, removing reliance on manual code review alone.
+### Why SAST Matters
+- **Shift-Left Security**: Moves detection to pull request creation, preventing vulnerabilities from reaching build, staging, or production environments.
+- **Cost Reduction**: Remediation at the pull request stage costs a fraction of addressing defects after deployment.
+- **Comprehensive Coverage**: SAST inspects all code paths across repositories, including edge cases rarely triggered during runtime testing.
+- **Actionable Developer Feedback**: Automated PR annotations pinpoint the exact file and line number requiring remediation.
+- **Compliance & Audit Readiness**: Provides demonstrable, auditable proof of static analysis required under **ISO 27001**, **OWASP ASVS**, and **PCI DSS**.
 
 ### SAST vs. DAST vs. IAST
 
-| Type | Name | How it works | When it runs |
-| --- | --- | --- | --- |
-| SAST | Static Application Security Testing | Analyzes source code without executing it (white-box) | Early in development, typically during development or CI. |
-| DAST | Dynamic Application Security Testing | Tests a running application from the outside (black-box) | Later in the lifecycle, against running applications in test or deployed environments. |
-| IAST | Interactive Application Security Testing | Instruments the running app and observes behavior in real time | During application testing, from inside the running application. |
+| Type | Full Name | Methodology | Execution Stage | Ecosystem Scope |
+| :--- | :--- | :--- | :--- | :--- |
+| **SAST** | Static Application Security Testing | Source code & configuration analysis (White-box) | CI Pipeline (Pull Requests & Pushes) | **Active & Enforced** |
+| **DAST** | Dynamic Application Security Testing | Outside-in runtime vulnerability testing (Black-box) | Staging / Deployed Environments | Future Roadmap (#549) |
+| **IAST** | Interactive Application Security Testing | Runtime agent monitoring inside test execution | Integration Testing | Out of Scope |
 
-Note on scope: DAST and IAST are not yet supported and document focuses only on SAST.
+---
 
-## 2. Overview of the integration
+## 2. Overview of the Integration
 
-SAST is integrated into the CI/CD pipelines of the adorsys Wazuh ecosystem. Scans run automatically on pull requests and pushes, analyzing first-party code for security vulnerabilities before it is merged and deployed.
+SAST is integrated across the CI/CD pipelines of the Wazuh ecosystem. Automated scans trigger on every pull request and push to protected branches, validating first-party code before merge.
 
-The integration is built on the shared, reusable templates in adorsys-ci-cd-templates, so every consuming repository gets the same security bar without maintaining its own pipeline logic. Each scanner is opt-in and additive, so existing pipelines are unaffected.
+The integration leverages shared, version-pinned reusable workflows from `ADORSYS-GIS/adorsys-ci-cd-templates`. This ensures an identical security standard across all repositories while eliminating duplicated pipeline maintenance.
 
 ### Goals
+- Automatically detect security weaknesses in first-party code during CI.
+- Surface findings inline on GitHub pull requests using Reviewdog for rapid remediation.
+- Enforce strict severity gates on protected branches so High and Critical findings block merges.
+- Enforce SonarQube as the centralized quality and compliance gate across releases.
+- Maintain a single, version-controlled set of reusable workflow templates.
 
-- Automatically detect security vulnerabilities in first-party code during CI.
-- Surface findings to developers inline on pull requests for fast remediation.
-- Enforce a severity-based gate on protected branches so High/Critical findings cannot be merged.
-- Provide SonarQube as the primary code-quality and security gate, including compliance-standard reporting.
-- Reuse a single, maintained set of templates across all repositories for consistency.
+### Non-Goals / Out of Scope
+- DAST and IAST testing (tracked separately under roadmap epic #549).
+- Deep scanning of third-party vendor libraries beyond standard dependency checks.
+- Replacing peer security reviews (SAST complements human code review).
 
-### Non-goals / out of scope
-
-- DAST and IAST (tracked separately under #549).
-- Scanning of third-party/vendored code beyond what the scanners detect by default.
-- Replacing manual security code review, SAST complements, not replaces, human review.
+---
 
 ## 3. Architecture
 
-![image-20261013-175525.png](images/image-20261013-175525.png)
+The SAST pipeline operates as a two-tier verification model:
 
-## 4. Tools used
+```mermaid
+graph TD
+    A[Developer opens PR / pushes code] --> B[GitHub Actions Runner]
+    
+    subgraph "Tier 1: Fast Inline PR Scans (adorsys-ci-cd-templates)"
+        B --> C1[ShellCheck<br/>sast-shell.yml]
+        B --> C2[PSScriptAnalyzer<br/>sast-powershell.yml]
+        B --> C3[Bandit<br/>sast-python.yml]
+        B --> C4[Semgrep / Clippy / Gosec<br/>sast-*.yml]
+        C1 & C2 & C3 & C4 --> D[Generate SARIF 2.1.0 Artifacts]
+        D --> E[reviewdog Action]
+        E --> F[Inline PR Annotations & Checks]
+    end
 
-| Tool | Purpose | Reusable workflow |
-| --- | --- | --- |
-| SonarQube | Full-branch static analysis; gates on bugs/vulnerabilities, BLOCKER/CRITICAL/MAJOR severity, and compliance standards | sonarqube.yml |
-| Checkov | IaC scanning (Terraform / Helm) | sast-iac.yml |
-| ShellCheck | Shell scripts (*.sh, *.bash, *.zsh) | sast-shell.yml |
-| Semgrep | Multi-language scanning (auto-detect) | sast-semgrep.yml |
-| Bandit | Python | sast-python.yml |
-| Gosec | Go | sast-go.yml |
-| Clippy + Semgrep | Rust | sast-rust.yml |
-| PSScriptAnalyzer | PowerShell | sast-powershell.yml |
-| ESLint | JavaScript / TypeScript (eslint-plugin-security) | sast-javascript-typescript.yml |
-| reviewdog | Surfaces SARIF findings as PR/commit check annotations | reviewdog |
+    subgraph "Tier 2: Centralized Code Quality & Compliance Gate"
+        B --> G[SonarQube Scanner<br/>sonarqube.yml]
+        G --> H[SonarQube Server<br/>sonarqube.sol-adorsys.com]
+        H --> I{Quality Gate}
+        I -->|Pass| J[Green PR Check: Ready to Merge]
+        I -->|Fail| K[Red PR Check: Merge Blocked]
+    end
+```
 
-### SonarQube : The primary gate
+---
 
-SonarQube is the primary code-quality and security gate. It performs full-branch analysis (never PR-diff-only), so pre-existing issues surface as well as new ones. It enforces three independent gate conditions:
+## 4. Tools & Scanner Matrix
 
-- Any unresolved bug or vulnerability (any severity).
-- Any BLOCKER / CRITICAL / MAJOR issue (any type, including code smells).
-- Any issue mapped to a configured compliance standard: OWASP Top 10 2021 CWE Top 25 2024 PCI DSS 4.0 OWASP ASVS 4.0 STIG ASD V5R3 CASA
+| Tool | Target Language / Technology | Purpose | Reusable Workflow |
+| :--- | :--- | :--- | :--- |
+| **SonarQube** | Multi-language | Full-branch static analysis; quality gate enforcement on bugs, vulnerabilities, and compliance standards | `sonarqube.yml` |
+| **Checkov** | IaC (Terraform, Helm, Kubernetes) | Misconfigurations, insecure defaults, compliance benchmarks | `sast-iac.yml` |
+| **ShellCheck** | Shell (`*.sh`, `*.bash`, `*.zsh`) | Syntax issues, variable quoting, injection risks, portability flaws | `sast-shell.yml` |
+| **PSScriptAnalyzer** | PowerShell (`*.ps1`, `*.psm1`) | Windows script security rules, execution vulnerabilities | `sast-powershell.yml` |
+| **Bandit** | Python (`*.py`) | Common Python security flaws (unsafe yaml, subprocess injection) | `sast-python.yml` |
+| **Gosec** | Go (`*.go`) | Go AST security inspection | `sast-go.yml` |
+| **Clippy + Semgrep** | Rust (`*.rs`) | Idiomatic Rust lints, memory safety, and semantic security patterns | `sast-rust.yml` |
+| **ESLint + Semgrep** | JavaScript / TypeScript | Security plugins (`eslint-plugin-security`), prototype pollution | `sast-javascript-typescript.yml` |
+| **Reviewdog** | All SARIF outputs | Converts scanner SARIF 2.1.0 findings into inline GitHub check annotations | Shared Action |
 
-Former Security Hotspots are now raised as vulnerabilities, so they are covered by the type condition ; no separate hotspot query is needed.
+### SonarQube: The Primary Quality Gate
+SonarQube acts as the centralized code-quality and compliance authority. It performs full-branch analysis (evaluating whole branch state, not just diffs) and enforces three gate conditions:
+1. **Zero Unresolved Bugs or Vulnerabilities** (at any severity level).
+2. **Zero Blockers, Criticals, or Major Issues** (including architectural code smells).
+3. **Compliance Standard Alignment**: Evaluates findings mapped against standard frameworks:
+   - **OWASP Top 10** (2021)
+   - **CWE Top 25** (2024)
+   - **PCI DSS 4.0**
+   - **OWASP ASVS 4.0**
+   - **STIG ASD V5R3 / CASA**
 
-### Scanner selection by language
+---
 
-The wazuh repository itself uses Checkov (IaC) and ShellCheck (shell), plus SonarQube. Other repositories select the scanners that match their technology stack:
+## 5. How It Works
 
-| Language / technology | Scanner |
-| --- | --- |
-| Terraform / Helm (IaC) | Checkov |
-| Shell (*.sh, *.bash, *.zsh) | ShellCheck |
-| Python | Bandit |
-| Go | Gosec |
-| Rust | Clippy + Semgrep |
-| PowerShell | PSScriptAnalyzer |
-| JavaScript / TypeScript | Semgrep + ESLint |
-| Java | Semgrep |
+1. A pull request or push to a protected branch triggers the SAST workflow.
+2. Individual language scanners execute in parallel, emitting standardized **SARIF 2.1.0** reports.
+3. **Reviewdog** parses the SARIF files and posts inline comments directly onto the changed lines in GitHub.
+4. **SonarQube** executes full-branch analysis, evaluating overall maintainability, security hotspots, and quality gates.
+5. On protected branches (`develop`, `main`), High/Critical findings fail the pipeline and block merges. On feature branches, findings remain advisory to allow work-in-progress iteration.
 
-## 5. How it works
+### Example Caller Workflow (`.github/workflows/sast.yml`)
 
-- A PR or push to a protected branch triggers the SAST workflow(s).
-- Each scanner runs against the repository and emits results as SARIF 2.1.0.
-- reviewdog converts the SARIF into check annotations on the PR (or commit for pushes), so developers see findings inline ; including pre-existing findings in any file the PR touches.
-- SonarQube runs a full-branch analysis and enforces the quality gate.
-- On protected branches, High/Critical findings fail the build; on feature branches, findings are advisory only.
+```yaml
+name: Static Application Security Testing (SAST)
 
-### Example caller workflow (.github/workflows/sast.yml )
+on:
+  pull_request:
+    branches: [main, develop]
+  push:
+    branches: [main, develop]
+  workflow_dispatch:
 
-### Example SonarQube workflow (.github/workflows/sonarqube.yml )
+jobs:
+  sast-shell:
+    uses: ADORSYS-GIS/adorsys-ci-cd-templates/.github/workflows/sast-shell.yml@main
+    with:
+      runner: ubuntu-latest
+      working-directory: "."
+    permissions:
+      contents: read
+      actions: read
+      checks: write
 
-## 6. Gating policy
+  sast-powershell:
+    uses: ADORSYS-GIS/adorsys-ci-cd-templates/.github/workflows/sast-powershell.yml@main
+    with:
+      runner: ubuntu-latest
+      working-directory: "."
+    permissions:
+      contents: read
+      actions: read
+      checks: write
 
-| Context | Behavior |
-| --- | --- |
-| Feature branches | Advisory ; scans run with continue-on-error / allow_failure; findings are reported as annotations but do not block the PR. |
-| Protected branches (develop, main, master) | Hard-fail on High/Critical findings (SARIF severity error) in files the PR touches. |
-| SonarQube | Fails on unresolved bugs/vulnerabilities, BLOCKER/CRITICAL/MAJOR issues, and compliance-standard findings. |
-| Scanner crash / no-op | Reported as a step failure regardless of findings (guards against silent false-green). |
+  sast-python:
+    uses: ADORSYS-GIS/adorsys-ci-cd-templates/.github/workflows/sast-python.yml@main
+    with:
+      runner: ubuntu-latest
+      working-directory: "."
+      python-version: "3.12"
+    permissions:
+      contents: read
+      actions: read
+      checks: write
+```
 
-### Why advisory on feature branches?
+### Example SonarQube Workflow (`.github/workflows/sonarqube.yml`)
 
-During the integration phase, strict gating on feature branches would have blocked ongoing work on repositories with pre-existing findings. Advisory mode lets developers see and fix findings without being blocked, while protected branches still enforce the security bar before anything reaches production.
+```yaml
+name: SonarQube
 
-Rollout note: the gate was integrated with advisory behavior first so ongoing work was not blocked during the integration phase. Now that integration is complete, repositories with pre-existing findings may see workflow failures; follow-up tickets track remediation per repository.
+on:
+  push:
+    branches: [develop, main]
+  workflow_dispatch:
 
-## 7. Repositories integrated
+permissions:
+  contents: read
 
-| Repository | PR |
-| --- | --- |
-| wazuh-yara | #96 |
-| wazuh-agent-status | #248 |
-| wazuh-suricata | #50 |
-| wazuh-cert-oauth2 | #348 |
-| wazuh-agent-installer | #28 |
-| wazuh | #2167 |
-| wazuh-helm | #456 |
-| wazuh-agent | #257 |
-| wazuh-plugins | #16 |
-| global-gateway | #12 |
+jobs:
+  scan:
+    uses: ADORSYS-GIS/adorsys-ci-cd-templates/.github/workflows/sonarqube.yml@main
+    with:
+      project-key: wazuh-agent
+      runner: arc-runner-set
+    secrets:
+      SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+```
 
-## 8. SonarQube setup
+---
 
-- Repository secrets: SONAR_HOST_URL, SONAR_TOKEN.
-- Repository variable: SONAR_PROJECT_KEY (the project must already exist in SonarQube).
-- Full-branch analysis: the workflow analyses the whole source branch (sonar.branch.name), not just the PR diff.
-- Quality gate: polled via the SonarQube API (not qualitygate.wait), with a configurable analysis-timeout (default 300s) and retries on transient failures.
-- Optional inputs: source-dirs, exclusions, test-dirs, coverage-report-paths, fail-types, fail-severities, compliance-filters.
+## 6. Gating Policy
 
-## 9. Results & accessibility
+| Branch Context | Gating Behavior | Rationale |
+| :--- | :--- | :--- |
+| **Feature Branches** (`feat/*`, `fix/*`) | **Advisory**: Scans report inline Reviewdog annotations without failing the build. | Allows developers to iterate and review findings without blocking ongoing work. |
+| **Protected Branches** (`develop`, `main`) | **Enforced**: High and Critical findings fail the build (`exit code 1`). | Guarantees that vulnerable code cannot enter production releases. |
+| **SonarQube Quality Gate** | **Enforced**: Fails on unresolved bugs, vulnerabilities, or Blockers/Criticals. | Provides auditable quality gate verification for releases. |
+| **Scanner Execution Failure** | **Hard Fail**: A crashing or misconfigured scanner fails the step. | Prevents silent false-positive greens if scanning fails to run. |
 
-- PR check annotations: via reviewdog, visible directly on the pull request.
-- SonarQube: full findings and compliance reports in the SonarQube server UI.
-- SARIF artifacts: raw scan results retained for audit.
-- No GitHub Advanced Security / CodeQL upload is required, so no paid GHAS entitlement is needed on private repos.
+---
 
-## 10. Onboarding sast onto a new repository
+## 7. Repositories Integrated
 
-To add SAST to a new repository:
+The following 10 core Wazuh ecosystem repositories have integrated the standardized SAST workflows:
 
-- Add a caller workflow .github/workflows/sast.yml referencing the relevant sast-*.yml templates for your stack.
-- Add .github/workflows/sonarqube.yml and configure SONAR_HOST_URL / SONAR_TOKEN secrets and the SONAR_PROJECT_KEY variable.
-- Ensure the project key exists in SonarQube.
-- Open a PR; verify the scans run and findings appear as annotations.
-- Triage any pre-existing findings (start advisory, tighten the gate once a clean baseline is reached).
+| Repository | Integration PR | Primary Scanners Enforced |
+| :--- | :---: | :--- |
+| **`wazuh-agent`** | [#257](https://github.com/ADORSYS-GIS/wazuh-agent/pull/257) | ShellCheck, PSScriptAnalyzer, Bandit, SonarQube |
+| **`wazuh-agent-installer`** | [#28](https://github.com/ADORSYS-GIS/wazuh-agent-installer/pull/28) | Clippy, Semgrep, SonarQube |
+| **`wazuh-agent-status`** | [#248](https://github.com/ADORSYS-GIS/wazuh-agent-status/pull/248) | Clippy, Semgrep, SonarQube |
+| **`wazuh-cert-oauth2`** | [#348](https://github.com/ADORSYS-GIS/wazuh-cert-oauth2/pull/348) | Clippy, Trivy, SonarQube |
+| **`wazuh-helm`** | [#456](https://github.com/ADORSYS-GIS/wazuh-helm/pull/456) | Checkov, ShellCheck, SonarQube |
+| **`wazuh-plugins`** | [#16](https://github.com/ADORSYS-GIS/wazuh-plugins/pull/16) | Bandit, ShellCheck, SonarQube |
+| **`wazuh-suricata`** | [#50](https://github.com/ADORSYS-GIS/wazuh-suricata/pull/50) | ShellCheck, BATS/kcov Coverage, SonarQube |
+| **`wazuh-yara`** | [#96](https://github.com/ADORSYS-GIS/wazuh-yara/pull/96) | ShellCheck, SonarQube |
+| **`wazuh`** | [#2167](https://github.com/ADORSYS-GIS/wazuh/pull/2167) | Checkov, ShellCheck, SonarQube |
+| **`global-gateway`** | [#12](https://github.com/ADORSYS-GIS/global-gateway/pull/12) | Checkov, Ansible Lint, SonarQube |
 
-## 11. References
+---
 
-- Reusable templates: adorsys-ci-cd-templates
-- Parent ticket: wazuh#549
+## 8. SonarQube Setup & Configuration
 
-+
+- **Repository Secrets Required**:
+  - `SONAR_HOST_URL`: Base URL of the SonarQube server (`https://sonarqube.sol-adorsys.com`).
+  - `SONAR_TOKEN`: Dedicated project analysis token.
+- **Repository Variables**:
+  - `SONAR_PROJECT_KEY`: Must match the registered project key in SonarQube.
+- **Analysis Scope**:
+  - Full-branch analysis runs on every push to protected branches (`sonar.branch.name`).
+- **Quality Gate Polling**:
+  - The CI workflow polls the SonarQube Quality Gate API (with configurable 300s timeout and automatic retry on transient network failures).
+
+---
+
+## 9. Onboarding SAST to a New Repository
+
+To onboard an additional repository into the Wazuh SAST ecosystem:
+
+1. **Add Caller Workflow**: Create `.github/workflows/sast.yml` referencing the language templates matching the repository stack.
+2. **Add SonarQube Workflow**: Create `.github/workflows/sonarqube.yml` and register `SONAR_HOST_URL` and `SONAR_TOKEN` in GitHub Secrets.
+3. **Register Project**: Ensure the project key exists on `https://sonarqube.sol-adorsys.com`.
+4. **Grant CI Permissions**: Ensure the GitHub Actions workflow contains `permissions: { contents: read, checks: write }` for Reviewdog annotations.
+5. **Add Local ADR**: Add an Architecture Decision Record in `docs/architecture/adr/` capturing the pre-merge enforcement policy.
+6. **Reference Central Guide**: Link `README.md` to this master guide in `wazuh-playbook`.
+
+---
+
+## 10. References & Related Documentation
+
+- **Reusable CI Templates**: [`ADORSYS-GIS/adorsys-ci-cd-templates`](https://github.com/ADORSYS-GIS/adorsys-ci-cd-templates)
+- **Master Epic**: `ADORSYS-GIS/wazuh#549` / `ADORSYS-GIS/wazuh#2190`
+- **Internal SonarQube Server**: `https://sonarqube.sol-adorsys.com`
