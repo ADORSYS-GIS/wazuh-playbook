@@ -9,4 +9,4 @@ Use this process for every Wazuh production release. It records who approved the
 5. Run the validation checks and record results with evidence links. If checks fail or a rollback trigger is met, follow the rollback plan and record the outcome.
 6. Notify stakeholders, assign follow-up actions, and close the record. Keep evidence in approved access-controlled systems; never add credentials or secrets to these files.
 
-Use the [Wazuh cluster upgrade playbook](../wazuh-cluster.md) for the technical deployment steps. Keep older release records as written; add a dated note if audit context is missing rather than changing past history.
+Use the [Wazuh cluster upgrade playbook](../wazuh-cluster-update.md) for the technical deployment steps. Keep older release records as written; add a dated note if audit context is missing rather than changing past history.
