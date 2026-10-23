@@ -231,8 +231,9 @@ The following 10 core Wazuh ecosystem repositories have integrated the standardi
   - `SONAR_TOKEN`: Dedicated project analysis token.
 - **Repository Variables**:
   - `SONAR_PROJECT_KEY`: Must match the registered project key in SonarQube.
-- **Analysis Scope**:
+- **Analysis Scope & Exclusions**:
   - Full-branch analysis runs on every push to protected branches (`sonar.branch.name`).
+  - Detailed scan exclusion rules and per-repository configurations are documented in the [SonarQube Scan Exclusions Guide](sonarqube-scan-exclusions.md).
 - **Quality Gate Polling**:
   - The CI workflow polls the SonarQube Quality Gate API (with configurable 300s timeout and automatic retry on transient network failures).
 
@@ -253,6 +254,7 @@ To onboard an additional repository into the Wazuh SAST ecosystem:
 
 ## 10. References & Related Documentation
 
+- **SonarQube Scan Exclusions Guide**: [`sonarqube-scan-exclusions.md`](sonarqube-scan-exclusions.md)
 - **Reusable CI Templates**: [`ADORSYS-GIS/adorsys-ci-cd-templates`](https://github.com/ADORSYS-GIS/adorsys-ci-cd-templates)
 - **Master Epics / Tracking**: [ADORSYS-GIS/wazuh#549](https://github.com/ADORSYS-GIS/wazuh/issues/549) (SAST Integration) / [ADORSYS-GIS/wazuh#2185](https://github.com/ADORSYS-GIS/wazuh/issues/2185) (DAST Roadmap) / [ADORSYS-GIS/wazuh#2190](https://github.com/ADORSYS-GIS/wazuh/issues/2190) (SonarQube Code Coverage)
 - **Internal SonarQube Server**: `https://sonarqube.sol-adorsys.com`
