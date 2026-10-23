@@ -1,86 +1,66 @@
-# ✅ Deploy to Production Request
+# Production release record
 
----
+> Copy this file to `YYYY-MM-DD.md` (add the change ID if there is more than one release that day). Complete it before deployment. Link to evidence; never include credentials or secrets.
 
-## 📌 Summary
+## Release details
 
-> Brief description of the feature/fix being deployed and the reason for the deployment.
+| Field | Details |
+| --- | --- |
+| Change ID / ticket | |
+| Release date | YYYY-MM-DD |
+| Release owner | |
+| Target environment | Production |
+| Affected services / agents | |
+| Current version → target version | |
+| Reason for change | |
+| Release / pull request links | |
+| Expected impact / downtime | |
 
----
+## Readiness
 
-## 📦 Change Description
+| Check | Evidence / details |
+| --- | --- |
+| Security risks and mitigations | |
+| Test environment and results | |
+| Review and scan results | |
+| Backup or recovery point | |
+| Monitoring / dashboard | |
+| Rollback trigger | |
+| Rollback steps and estimated time | |
 
-- Feature(s) / Fix(es):
-  - [JIRA-XXX] Feature X
-  - [MR#123] Fix Y
-- Code Repository: [link]
-- Related Commits / Merge Requests: [link]
+## Approval
 
----
+| Approver and role | Decision | Date/time and timezone | Evidence link |
+| --- | --- | --- | --- |
+| | | | |
 
-## 🗂️ Environment
+Record approval before deployment. The deployer cannot be the only approver. For any check that does not apply, enter `N/A` and explain why.
 
-- **Target Environment:** Production
-- **Affected Services:** e.g. Backend API, Frontend, Lambda Functions
-- **Environment URLs:**
-  - Staging: https://staging.example.com
-  - Production: https://prod.example.com
+## Deployment
 
----
+| Field | Details |
+| --- | --- |
+| Approved window | |
+| Deployer(s) | |
+| Pipeline / Argo CD run | |
+| Actual start / end time | |
+| Steps performed | |
+| Deviations and reason | |
 
-## 🧪 Pre-Deployment Checklist
+## Validation and closeout
 
-- [ ] Code reviewed and approved
-- [ ] All tests passed (unit, integration, e2e)
-- [ ] Manual QA passed on staging
-- [ ] Infrastructure changes tested
-- [ ] Security scans passed (e.g. Snyk, Trivy)
-- [ ] Cost impact validated (if applicable)
-- [ ] Downtime expected? If yes, stakeholders informed
+| Check | Expected result | Result | Evidence link |
+| --- | --- | --- | --- |
+| Manager, indexer, and dashboard | Healthy; target versions active | | |
+| Agent connectivity and event flow | Expected agents reporting; events flowing | | |
+| Changed rules or integrations | Expected behavior confirmed | | |
+| Alerts, errors, and performance | No unexplained critical issues | | |
 
----
-
-## 📅 Deployment Plan
-
-1. Trigger CI/CD deployment pipeline: [link]
-2. Apply Terraform changes (if any)
-3. Run DB migrations (if needed)
-4. Enable feature flags (if applicable)
-5. Perform smoke test on production
-6. Validate system health via dashboards and logs
-
----
-
-## 🧯 Rollback Plan
-
-- Revert to last stable deployment
-- Rollback Terraform (if infra changed)
-- Rollback DB schema (if migration was applied)
-- Disable feature flags
-- Notify stakeholders
-- Time estimate for rollback: _e.g., 15 minutes_
-
----
-
-## 👥 Stakeholders & Notifications
-
-- **Dev Contact:** @dev-username
-- **QA Contact:** @qa-username
-- **Product Owner:** @product-owner
-- **Slack Channel Notification:** #prod-deploys
-
----
-
-## 🕐 Deployment Window
-
-- **Scheduled Date & Time:** YYYY-MM-DD @ HH:MM (UTC)
-- **Approved by:** @approver
-
----
-
-## ✅ Post-Deployment Validation
-
-- [ ] Application accessible and functioning
-- [ ] KPIs and dashboards show normal behavior
-- [ ] Alerts and logs reviewed
-- [ ] Confirmation sent to stakeholders
+| Closeout | Details |
+| --- | --- |
+| Release outcome | Successful / Rolled back / Partially successful |
+| Rollback performed | Yes / No; details and evidence |
+| Stakeholders notified | Who, when, and link |
+| Open issues and owners | |
+| Record closed by / date | |
+| Evidence location | Approved access-controlled system |
