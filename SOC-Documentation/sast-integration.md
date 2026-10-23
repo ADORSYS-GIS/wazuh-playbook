@@ -246,7 +246,7 @@ To onboard an additional repository into the Wazuh SAST ecosystem:
 2. **Add SonarQube Workflow**: Create `.github/workflows/sonarqube.yml` and register `SONAR_HOST_URL` and `SONAR_TOKEN` in GitHub Secrets.
 3. **Register Project**: Ensure the project key exists on `https://sonarqube.sol-adorsys.com`.
 4. **Grant CI Permissions**: Ensure the GitHub Actions workflow contains `permissions: { contents: read, checks: write }` for Reviewdog annotations.
-5. **Add Local ADR**: Add an Architecture Decision Record in `docs/architecture/adr/` capturing the pre-merge enforcement policy.
+5. **Add Local ADR**: Add an Architecture Decision Record in `docs/adr/` following the [canonical ADR template](https://github.com/ADORSYS-GIS/wazuh/blob/main/docs/adr/template.md) and [writing guide](https://github.com/ADORSYS-GIS/wazuh/blob/main/docs/adr/GUIDE.md) in `ADORSYS-GIS/wazuh`, capturing the pre-merge enforcement policy (e.g. `ADR-0001: Pre-Merge SAST Enforcement`).
 6. **Reference Central Guide**: Link `README.md` to this master guide in `wazuh-playbook`.
 
 ---
