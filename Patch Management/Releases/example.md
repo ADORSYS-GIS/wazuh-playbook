@@ -20,13 +20,26 @@
 
 ## Deployment
 
-- **Deployer and time:** Not recorded
-- **Pipeline / Argo CD link:** Not recorded. Plan was to update Wazuh `targetVersion` in Argo CD.
-- **Steps completed / deviations:** Not recorded. The plan included a production backup, deployment, health checks, and Jira/rule tests.
+- **Deployer and deployment time:** Not recorded
+- **Pipeline / Argo CD run:** Not recorded
+- **Recorded deployment plan** (completion was not recorded):
+  - [ ] Confirm approval and deployment window
+  - [ ] Back up the production cluster
+  - [ ] Update Wazuh `targetVersion` in Argo CD and deploy
+  - [ ] Check cluster health after deployment
+  - [ ] Test Jira integration
+  - [ ] Test false-positive rules
+  - [ ] Run system checks and record any deviations
+- **Deviations:** Not recorded
 
 ## Validation
 
-- **Checks and results:** Not recorded. Planned checks covered cluster health, Jira integration, and false-positive rules.
+- **Recorded validation plan** (results were not recorded):
+  - [ ] Wazuh dashboard is accessible
+  - [ ] Manager, indexer, and dashboard are healthy
+  - [ ] Jira integration works in production
+  - [ ] False-positive rules behave as expected
+  - [ ] No unexpected errors or alerts appear in logs
 - **Evidence links:** Not recorded
 - **Outcome:** Not recorded
 
