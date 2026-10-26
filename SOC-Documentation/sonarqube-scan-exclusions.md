@@ -81,6 +81,7 @@ This project includes Python tooling used for building and testing.
 | **/__pycache__/** | Python bytecode caches. |
 | **/venv/** | Python virtual environments and their installed dependencies. |
 | **/.venv/** | Python virtual environments and their installed dependencies. |
+| tests/** | Test suites and test fixtures. |
 
 ## 6. wazuh-yara
 
@@ -115,12 +116,36 @@ This project contains Infrastructure as code, including Terraform and Ansible fo
 
 | Excluded pattern | Reason |
 | --- | --- |
-| **/.terraform.lock.hcl | Terraform dependency lock files |
+| **/.terraform.lock.hcl | Terraform dependency lock files. |
+| **/.claude/** | AI agent tooling configuration and cache. |
+| .scannerwork/** | SonarScanner internal working directory and analysis cache. |
 | **/__pycache__/** | Python bytecode caches. |
-| **/.claude/** | AI agent tooling |
-| docs/** | markdown documentation |
+| **/*.pyc | Compiled Python bytecode files. |
+| docs/** | Markdown documentation. |
 
-## 9. Projects Using Shared Template Defaults
+## 9. wazuh-agent
+
+**Configuration:** [sonarqube.yml](https://github.com/ADORSYS-GIS/wazuh-agent/blob/main/.github/workflows/sonarqube.yml)
+
+This project contains installation and configuration scripts written in Shell and PowerShell, alongside BATS test suites.
+
+| Excluded pattern | Reason |
+| --- | --- |
+| **/coverage/** | Generated coverage reports and artifacts (e.g. `coverage/sonar-coverage.xml`). |
+
+*Note*: Test scripts, OS-specific files, and helper scripts are handled under coverage exclusions (`extra-sonar-args: -Dsonar.coverage.exclusions=...`) rather than general issue analysis exclusions.
+
+## 10. wazuh-trivy
+
+**Configuration:** [sonarqube.yml](https://github.com/ADORSYS-GIS/wazuh-trivy/blob/main/.github/workflows/sonarqube.yml)
+
+This project integrates Trivy vulnerability scanning into the Wazuh security pipeline.
+
+| Excluded pattern | Reason |
+| --- | --- |
+| **/coverage/** | Generated coverage reports and artifacts. |
+
+## 11. Projects Using Shared Template Defaults
 
 The following repositories do not override the shared workflow's `exclusions` input and therefore use its default exclusion patterns:
 
@@ -128,13 +153,12 @@ The following repositories do not override the shared workflow's `exclusions` in
 
 | Project | SonarQube configuration | Project contents |
 | --- | --- | --- |
-| wazuh | wazuh/.github/workflows/sonarqube.yml | Infrastructure as code, including Terraform and ArgoCD, plus Shell scripts. |
-| wazuh-agent | wazuh-agent/.github/workflows/sonarqube.yml | Installation scripts written in Shell and PowerShell. |
-| wazuh-helm | wazuh-helm/.github/workflows/sonarqube.yml | Helm charts and Python tooling. |
+| wazuh | [sonarqube.yml](https://github.com/ADORSYS-GIS/wazuh/blob/main/.github/workflows/sonarqube.yml) | Infrastructure as code, including Terraform and ArgoCD, plus Shell scripts. |
+| wazuh-helm | [sonarqube.yml](https://github.com/ADORSYS-GIS/wazuh-helm/blob/main/.github/workflows/sonarqube.yml) | Helm charts and Python tooling. |
 
 These defaults are intended to exclude dependencies, generated output, and build artifacts rather than hand-written project source code.
 
-## 10. wazuh-playbook
+## 12. wazuh-playbook
 
 The `wazuh-playbook` repository contains documentation and is not currently scanned by SonarQube.
 
@@ -144,7 +168,7 @@ The `wazuh-playbook` repository contains documentation and is not currently scan
 | sonar.exclusions | Not applicable |
 | Reason | The repository contains documentation and is not included in the SonarQube scan. |
 
-## 11. Shared CI Template Defaults
+## 13. Shared CI Template Defaults
 
 There are two default configurations to distinguish:
 
@@ -157,7 +181,7 @@ These patterns target third-party dependencies, generated output, and build arti
 
 Repository-specific overrides may differ from these defaults. The effective exclusions should therefore be checked in the relevant workflow or scanner configuration.
 
-## 12. Guidelines for Maintaining Exclusions
+## 14. Guidelines for Maintaining Exclusions
 
 | Guideline | Description |
 | --- | --- |
@@ -168,11 +192,11 @@ Repository-specific overrides may differ from these defaults. The effective excl
 | Keep exclusions consistent | Similar projects should use consistent patterns where their technology stacks and build structures are comparable. |
 | Review changes | When adding or changing an exclusion, verify that it does not unintentionally remove maintained source code from analysis. |
 
-The four Rust projects listed above share the same exclusion set:
+The three Rust / Tauri projects (`wazuh-agent-status`, `wazuh-gateway`, `wazuh-agent-installer`) share the standard Rust exclusion set:
 
 `**/target/**, **/node_modules/**, **/dist/**, **/coverage/**`
 
-This keeps their configurations consistent while excluding their build output, frontend dependencies, and coverage artifacts.
+This keeps their configurations consistent while excluding their build output, frontend dependencies, and coverage artifacts. For `wazuh-cert-oauth2`, the exclusion list additionally covers Jekyll site output (`_site/**`) and its coverage report (`lcov.info`).
 
 ## Summary
 

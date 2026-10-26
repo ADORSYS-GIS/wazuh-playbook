@@ -43,7 +43,7 @@ SAST tools parse the codebase and apply rule engines, semantic pattern matching,
 
 SAST is integrated across the CI/CD pipelines of the Wazuh ecosystem. Automated scans trigger on every pull request and push to protected branches, validating first-party code before merge.
 
-The integration leverages shared, version-pinned reusable workflows from `ADORSYS-GIS/adorsys-ci-cd-templates`. This ensures an identical security standard across all repositories while eliminating duplicated pipeline maintenance.
+The integration leverages shared reusable workflows from `ADORSYS-GIS/adorsys-ci-cd-templates@main`. This ensures an identical security standard across all repositories while eliminating duplicated pipeline maintenance.
 
 ### Goals
 - Automatically detect security weaknesses in first-party code during CI.
@@ -79,7 +79,7 @@ graph TD
 
     subgraph "Tier 2: Centralized Code Quality & Compliance Gate"
         B --> G[SonarQube Scanner<br/>sonarqube.yml]
-        G --> H[SonarQube Server<br/>sonarqube.sol-adorsys.com]
+        G --> H[SonarQube Server<br/>SONAR_HOST_URL]
         H --> I{Quality Gate}
         I -->|Pass| J[Green PR Check: Ready to Merge]
         I -->|Fail| K[Red PR Check: Merge Blocked]
@@ -119,7 +119,7 @@ SonarQube acts as the centralized code-quality and compliance authority. It perf
 
 1. A pull request or push to a protected branch triggers the SAST workflow.
 2. Individual language scanners execute in parallel, emitting standardized **SARIF 2.1.0** reports.
-3. **Reviewdog** parses the SARIF files and posts inline comments directly onto the changed lines in GitHub.
+3. **Reviewdog** parses the SARIF files and posts GitHub Check annotations on changed files (`-reporter=github-pr-check` on PRs, `-reporter=github-check` on pushes).
 4. **SonarQube** executes full-branch analysis, evaluating overall maintainability, security hotspots, and quality gates.
 5. On protected branches (`develop`, `main`), High/Critical findings fail the pipeline and block merges. On feature branches, findings remain advisory to allow work-in-progress iteration.
 
@@ -207,17 +207,18 @@ jobs:
 
 ## 7. Repositories Integrated
 
-The following 10 core Wazuh ecosystem repositories have integrated the standardized SAST workflows:
+The following 11 core Wazuh ecosystem repositories have integrated the standardized SAST workflows:
 
 | Repository | Integration PR | Primary Scanners Enforced |
 | :--- | :---: | :--- |
-| **`wazuh-agent`** | [#257](https://github.com/ADORSYS-GIS/wazuh-agent/pull/257) | ShellCheck, PSScriptAnalyzer, Bandit, SonarQube |
+| **`wazuh-agent`** | [#259](https://github.com/ADORSYS-GIS/wazuh-agent/pull/259) | ShellCheck, PSScriptAnalyzer, Bandit, SonarQube |
 | **`wazuh-agent-installer`** | [#28](https://github.com/ADORSYS-GIS/wazuh-agent-installer/pull/28) | Clippy, Semgrep, SonarQube |
 | **`wazuh-agent-status`** | [#248](https://github.com/ADORSYS-GIS/wazuh-agent-status/pull/248) | Clippy, Semgrep, SonarQube |
 | **`wazuh-cert-oauth2`** | [#348](https://github.com/ADORSYS-GIS/wazuh-cert-oauth2/pull/348) | Clippy, Trivy, SonarQube |
 | **`wazuh-helm`** | [#456](https://github.com/ADORSYS-GIS/wazuh-helm/pull/456) | Checkov, ShellCheck, SonarQube |
 | **`wazuh-plugins`** | [#16](https://github.com/ADORSYS-GIS/wazuh-plugins/pull/16) | Bandit, ShellCheck, SonarQube |
 | **`wazuh-suricata`** | [#50](https://github.com/ADORSYS-GIS/wazuh-suricata/pull/50) | ShellCheck, BATS/kcov Coverage, SonarQube |
+| **`wazuh-trivy`** | [#5](https://github.com/ADORSYS-GIS/wazuh-trivy/pull/5) | ShellCheck, SonarQube |
 | **`wazuh-yara`** | [#96](https://github.com/ADORSYS-GIS/wazuh-yara/pull/96) | ShellCheck, SonarQube |
 | **`wazuh`** | [#2167](https://github.com/ADORSYS-GIS/wazuh/pull/2167) | Checkov, ShellCheck, SonarQube |
 | **`global-gateway`** | [#12](https://github.com/ADORSYS-GIS/global-gateway/pull/12) | Checkov, Ansible Lint, SonarQube |
@@ -227,10 +228,10 @@ The following 10 core Wazuh ecosystem repositories have integrated the standardi
 ## 8. SonarQube Setup & Configuration
 
 - **Repository Secrets Required**:
-  - `SONAR_HOST_URL`: Base URL of the SonarQube server (`https://sonarqube.sol-adorsys.com`).
+  - `SONAR_HOST_URL`: Base URL of the SonarQube server (managed securely via repository secrets).
   - `SONAR_TOKEN`: Dedicated project analysis token.
-- **Repository Variables**:
-  - `SONAR_PROJECT_KEY`: Must match the registered project key in SonarQube.
+- **Workflow Parameters**:
+  - `project-key`: Passed directly to the reusable workflow (`with: project-key: <repository-name>`), matching the registered project in SonarQube.
 - **Analysis Scope & Exclusions**:
   - Full-branch analysis runs on every push to protected branches (`sonar.branch.name`).
   - Detailed scan exclusion rules and per-repository configurations are documented in the [SonarQube Scan Exclusions Guide](sonarqube-scan-exclusions.md).
@@ -245,7 +246,7 @@ To onboard an additional repository into the Wazuh SAST ecosystem:
 
 1. **Add Caller Workflow**: Create `.github/workflows/sast.yml` referencing the language templates matching the repository stack.
 2. **Add SonarQube Workflow**: Create `.github/workflows/sonarqube.yml` and register `SONAR_HOST_URL` and `SONAR_TOKEN` in GitHub Secrets.
-3. **Register Project**: Ensure the project key exists on `https://sonarqube.sol-adorsys.com`.
+3. **Register Project**: Ensure the project key exists on the centralized SonarQube server.
 4. **Grant CI Permissions**: Ensure the GitHub Actions workflow contains `permissions: { contents: read, checks: write }` for Reviewdog annotations.
 5. **Add Local ADR**: Add an Architecture Decision Record in `docs/adr/` following the [canonical ADR template](https://github.com/ADORSYS-GIS/wazuh/blob/main/docs/adr/template.md) and [writing guide](https://github.com/ADORSYS-GIS/wazuh/blob/main/docs/adr/GUIDE.md) in `ADORSYS-GIS/wazuh`, capturing the pre-merge enforcement policy (e.g. `ADR-0001: Pre-Merge SAST Enforcement`).
 6. **Reference Central Guide**: Link `README.md` to this master guide in `wazuh-playbook`.
@@ -257,4 +258,4 @@ To onboard an additional repository into the Wazuh SAST ecosystem:
 - **SonarQube Scan Exclusions Guide**: [`sonarqube-scan-exclusions.md`](sonarqube-scan-exclusions.md)
 - **Reusable CI Templates**: [`ADORSYS-GIS/adorsys-ci-cd-templates`](https://github.com/ADORSYS-GIS/adorsys-ci-cd-templates)
 - **Master Epics / Tracking**: [ADORSYS-GIS/wazuh#549](https://github.com/ADORSYS-GIS/wazuh/issues/549) (SAST Integration) / [ADORSYS-GIS/wazuh#2185](https://github.com/ADORSYS-GIS/wazuh/issues/2185) (DAST Roadmap) / [ADORSYS-GIS/wazuh#2190](https://github.com/ADORSYS-GIS/wazuh/issues/2190) (SonarQube Code Coverage)
-- **Internal SonarQube Server**: `https://sonarqube.sol-adorsys.com`
+- **SonarQube Server**: Configured securely across repositories via the `SONAR_HOST_URL` repository secret.
