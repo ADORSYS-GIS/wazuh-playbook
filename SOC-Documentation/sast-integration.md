@@ -207,7 +207,7 @@ jobs:
 
 ## 7. Repositories Integrated
 
-The following 11 core Wazuh ecosystem repositories have integrated the standardized SAST workflows:
+The following 10 core Wazuh ecosystem repositories have integrated the standardized SAST workflows:
 
 | Repository | Integration PR | Primary Scanners Enforced |
 | :--- | :---: | :--- |
@@ -218,7 +218,6 @@ The following 11 core Wazuh ecosystem repositories have integrated the standardi
 | **`wazuh-helm`** | [#456](https://github.com/ADORSYS-GIS/wazuh-helm/pull/456) | Checkov, ShellCheck, SonarQube |
 | **`wazuh-plugins`** | [#16](https://github.com/ADORSYS-GIS/wazuh-plugins/pull/16) | Bandit, ShellCheck, SonarQube |
 | **`wazuh-suricata`** | [#50](https://github.com/ADORSYS-GIS/wazuh-suricata/pull/50) | ShellCheck, BATS/kcov Coverage, SonarQube |
-| **`wazuh-trivy`** | [#5](https://github.com/ADORSYS-GIS/wazuh-trivy/pull/5) | ShellCheck, SonarQube |
 | **`wazuh-yara`** | [#96](https://github.com/ADORSYS-GIS/wazuh-yara/pull/96) | ShellCheck, SonarQube |
 | **`wazuh`** | [#2167](https://github.com/ADORSYS-GIS/wazuh/pull/2167) | Checkov, ShellCheck, SonarQube |
 | **`global-gateway`** | [#12](https://github.com/ADORSYS-GIS/global-gateway/pull/12) | Checkov, Ansible Lint, SonarQube |

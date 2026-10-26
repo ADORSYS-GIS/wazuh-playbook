@@ -4,7 +4,7 @@
 > **Document Status**: Approved  
 > **Classification**: Internal / ISO 27001 Operational Baseline  
 > **Target Audience**: SIEM Engineers, Wazuh Contributors, Security Auditors  
-> **Confluence Source**: [SonarQube Scan Exclusions adorsys Wazuh](https://adorsys.atlassian.net/wiki/spaces/Wazuh/pages/3169714251/SonarQube+Scan+Exclusions+adorsys+Wazuh)
+> **Source**: Centralized Wazuh Security Operations
 
 ---
 
