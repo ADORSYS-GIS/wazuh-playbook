@@ -207,20 +207,21 @@ jobs:
 
 ## 7. Repositories Integrated
 
-The following 10 core Wazuh ecosystem repositories have integrated the standardized SAST workflows:
+The following 11 core Wazuh ecosystem repositories have integrated the standardized SAST workflows:
 
 | Repository | Integration PR | Primary Scanners Enforced |
 | :--- | :---: | :--- |
 | **`wazuh-agent`** | [#259](https://github.com/ADORSYS-GIS/wazuh-agent/pull/259) | ShellCheck, PSScriptAnalyzer, Bandit, SonarQube |
-| **`wazuh-agent-installer`** | [#28](https://github.com/ADORSYS-GIS/wazuh-agent-installer/pull/28) | Clippy, Semgrep, SonarQube |
-| **`wazuh-agent-status`** | [#248](https://github.com/ADORSYS-GIS/wazuh-agent-status/pull/248) | Clippy, Semgrep, SonarQube |
-| **`wazuh-cert-oauth2`** | [#348](https://github.com/ADORSYS-GIS/wazuh-cert-oauth2/pull/348) | Clippy, Trivy, SonarQube |
-| **`wazuh-helm`** | [#456](https://github.com/ADORSYS-GIS/wazuh-helm/pull/456) | Checkov, ShellCheck, SonarQube |
+| **`wazuh-agent-installer`** | [#28](https://github.com/ADORSYS-GIS/wazuh-agent-installer/pull/28) | Clippy, Semgrep, ShellCheck, PSScriptAnalyzer, SonarQube |
+| **`wazuh-agent-status`** | [#248](https://github.com/ADORSYS-GIS/wazuh-agent-status/pull/248) | Clippy, Semgrep, ShellCheck, PSScriptAnalyzer, SonarQube |
+| **`wazuh-cert-oauth2`** | [#348](https://github.com/ADORSYS-GIS/wazuh-cert-oauth2/pull/348) | Clippy, Semgrep, ShellCheck, PSScriptAnalyzer, SonarQube |
+| **`wazuh-gateway`** | [#18](https://github.com/ADORSYS-GIS/wazuh-gateway/pull/18) | Clippy, Semgrep, SonarQube |
+| **`wazuh-helm`** | [#456](https://github.com/ADORSYS-GIS/wazuh-helm/pull/456) | Checkov, Bandit, ShellCheck, SonarQube |
 | **`wazuh-plugins`** | [#16](https://github.com/ADORSYS-GIS/wazuh-plugins/pull/16) | Bandit, ShellCheck, SonarQube |
-| **`wazuh-suricata`** | [#50](https://github.com/ADORSYS-GIS/wazuh-suricata/pull/50) | ShellCheck, BATS/kcov Coverage, SonarQube |
-| **`wazuh-yara`** | [#96](https://github.com/ADORSYS-GIS/wazuh-yara/pull/96) | ShellCheck, SonarQube |
+| **`wazuh-suricata`** | [#50](https://github.com/ADORSYS-GIS/wazuh-suricata/pull/50) | ShellCheck, PSScriptAnalyzer, SonarQube |
+| **`wazuh-yara`** | [#96](https://github.com/ADORSYS-GIS/wazuh-yara/pull/96) | Bandit, ShellCheck, PSScriptAnalyzer, SonarQube |
 | **`wazuh`** | [#2167](https://github.com/ADORSYS-GIS/wazuh/pull/2167) | Checkov, ShellCheck, SonarQube |
-| **`global-gateway`** | [#12](https://github.com/ADORSYS-GIS/global-gateway/pull/12) | Checkov, Ansible Lint, SonarQube |
+| **`global-gateway`** | [#12](https://github.com/ADORSYS-GIS/global-gateway/pull/12) | Checkov, Bandit, ShellCheck, SonarQube |
 
 ---
 
