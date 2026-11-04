@@ -51,7 +51,7 @@ Custom rules can be created to tune alert sensitivity and reduce false positives
 #### v. Post-Incident Review: 
 SOC team documents findings and updates security policies.
 
-<img src="/Operations/IMAGES/soc_overview.png">
+<img src="/docs/operations/images/soc_overview.png">
 
 
 ## 3. Demo Use Cases
