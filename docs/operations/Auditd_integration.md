@@ -124,14 +124,14 @@ All rules must include:
 -w /etc/shadow -p a -k audit-wazuh-a
 ```
 ### Link to audit rules from the SCA module:
-- [Ensure changes to system administration scope (sudoers) is collected](/Configuration%20Assesment/CIS%20Ubuntu%20Linux%2022.04%20LTS%20Benchmark%20v1.0.0./28597.md)
--  [Ensure actions as another user are always logged.](/Configuration%20Assesment/CIS%20Ubuntu%20Linux%2022.04%20LTS%20Benchmark%20v1.0.0./28598.md)
-- [Ensure events that modify date and time information are collected](/Configuration%20Assesment/CIS%20Ubuntu%20Linux%2022.04%20LTS%20Benchmark%20v1.0.0./28599.md)
-- [Ensure events that modify the system's network environment](/Configuration%20Assesment/CIS%20Ubuntu%20Linux%2022.04%20LTS%20Benchmark%20v1.0.0./28600.md)
-- [Ensure events that modify user/group information are collected.](/Configuration%20Assesment/CIS%20Ubuntu%20Linux%2022.04%20LTS%20Benchmark%20v1.0.0./28601.md)
-- [Ensure session initiation information is collected.](/Configuration%20Assesment/CIS%20Ubuntu%20Linux%2022.04%20LTS%20Benchmark%20v1.0.0./28602.md)
-- [Ensure login and logout events are collected.](/Configuration%20Assesment/CIS%20Ubuntu%20Linux%2022.04%20LTS%20Benchmark%20v1.0.0./28603.md)
-- [Ensure events that modify the system's Mandatory Access Control](/Configuration%20Assesment/CIS%20Ubuntu%20Linux%2022.04%20LTS%20Benchmark%20v1.0.0./28604.md)
-- [Ensure the audit configuration is immutable.](/Configuration%20Assesment/CIS%20Ubuntu%20Linux%2022.04%20LTS%20Benchmark%20v1.0.0./28605.md)
+- [Ensure changes to system administration scope (sudoers) is collected](/docs/reference/compliance/CIS%20Ubuntu%20Linux%2022.04%20LTS%20Benchmark%20v1.0.0./28597.md)
+-  [Ensure actions as another user are always logged.](/docs/reference/compliance/CIS%20Ubuntu%20Linux%2022.04%20LTS%20Benchmark%20v1.0.0./28598.md)
+- [Ensure events that modify date and time information are collected](/docs/reference/compliance/CIS%20Ubuntu%20Linux%2022.04%20LTS%20Benchmark%20v1.0.0./28599.md)
+- [Ensure events that modify the system's network environment](/docs/reference/compliance/CIS%20Ubuntu%20Linux%2022.04%20LTS%20Benchmark%20v1.0.0./28600.md)
+- [Ensure events that modify user/group information are collected.](/docs/reference/compliance/CIS%20Ubuntu%20Linux%2022.04%20LTS%20Benchmark%20v1.0.0./28601.md)
+- [Ensure session initiation information is collected.](/docs/reference/compliance/CIS%20Ubuntu%20Linux%2022.04%20LTS%20Benchmark%20v1.0.0./28602.md)
+- [Ensure login and logout events are collected.](/docs/reference/compliance/CIS%20Ubuntu%20Linux%2022.04%20LTS%20Benchmark%20v1.0.0./28603.md)
+- [Ensure events that modify the system's Mandatory Access Control](/docs/reference/compliance/CIS%20Ubuntu%20Linux%2022.04%20LTS%20Benchmark%20v1.0.0./28604.md)
+- [Ensure the audit configuration is immutable.](/docs/reference/compliance/CIS%20Ubuntu%20Linux%2022.04%20LTS%20Benchmark%20v1.0.0./28605.md)
 #### Reference:
 - [Wazuh documentation](https://documentation.wazuh.com/current/user-manual/capabilities/system-calls-monitoring/audit-configuration.html#configuration)
